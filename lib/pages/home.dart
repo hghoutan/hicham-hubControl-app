@@ -14,45 +14,77 @@ class HomePage extends StatefulWidget {
 }
 
 class _HomePageState extends State<HomePage> {
-
-  int _selectedIndex = 0;
-  List pages =[
-    FirstPage(),
-    Container(child: Center(child: Text("Next Page")),),
-  ];
+  late PersistentTabController _controller;
+  int _index = 0;
+  List<Widget>  _buildScreens() {
+    return [
+      const FirstPage(),
+      const SchedulePage(),
+    ];
+  }
+  List<PersistentBottomNavBarItem> _navBarsItems() {
+    return [
+      PersistentBottomNavBarItem(
+        icon: _index == 0 ? Icon(Icons.home,color: Colors.white) :  Icon(Icons.home_outlined,color: Colors.white),
+        title: ("Home"),
+        activeColorPrimary: Colors.white,
+        inactiveColorPrimary: Colors.white,
+      ),
+      PersistentBottomNavBarItem(
+        icon: _index == 1 ? Icon(Icons.calendar_month) : Icon(Icons.calendar_month_outlined),
+        title: ("calender"),
+        activeColorPrimary: Colors.white,
+        inactiveColorPrimary: Colors.white,
+      ),
+    ];
+  }
   @override
   void initState() {
-    // TODO: implement initState
     super.initState();
+        _controller = PersistentTabController(initialIndex: _index);
+
   }
   @override
   Widget build(BuildContext context) {
-    void onTapNav(int index){
+    _controller.addListener(() {
       setState(() {
-        _selectedIndex = index;
+        _index = _controller.index;
       });
-    }
-    return  Scaffold(
-      body: pages[_selectedIndex],
-      bottomNavigationBar: BottomNavigationBar(
-        backgroundColor: Color(0xffF94892),
-        selectedItemColor: Colors.white,
-        unselectedItemColor: Colors.white,
-        currentIndex: _selectedIndex,
-        showSelectedLabels: false,
-        showUnselectedLabels: false,
-        selectedFontSize: 0.0,
-        unselectedFontSize: 0.0,
-        onTap: onTapNav,
-        items: const [
-          BottomNavigationBarItem(icon: Icon(Icons.home),label: "home"),
-          BottomNavigationBarItem(icon: Icon(CupertinoIcons.calendar),label: "calender"),
-        ],
+    });
+    return Scaffold(
+      bottomNavigationBar: PersistentTabView(
+        context,
+        controller: _controller,
+        screens: _buildScreens(),
+        items: _navBarsItems(),
+        confineInSafeArea: true,
+        backgroundColor: const Color(0xffF94892), // Default is Colors.white.
+        handleAndroidBackButtonPress: true, // Default is true.
+        resizeToAvoidBottomInset: true, // This needs to be true if you want to move up the screen when keyboard appears. Default is true.
+        stateManagement: true, // Default is true.
+        hideNavigationBarWhenKeyboardShows: true, // Recommended to set 'resizeToAvoidBottomInset' as true while using this argument. Default is true.
+        decoration: NavBarDecoration(
+          borderRadius: BorderRadius.circular(10.0),
+          colorBehindNavBar :Color(0xffF94892),
+        ),
+        popAllScreensOnTapOfSelectedTab: true,
+        popActionScreens: PopActionScreensType.all,
+        itemAnimationProperties: const ItemAnimationProperties( // Navigation Bar's items animation properties.
+          duration: Duration(milliseconds: 200),
+          curve: Curves.ease,
+        ),
+        screenTransitionAnimation: const ScreenTransitionAnimation( // Screen transition animation on change of selected tab.
+          animateTabTransition: true,
+          curve: Curves.ease,
+          duration: Duration(milliseconds: 200),
+        ),
+        navBarStyle: NavBarStyle.style6, // Choose the nav bar style with this property.
       ),
     );
   }
+  }
 
 
-}
+
 
 

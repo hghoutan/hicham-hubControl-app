@@ -1,10 +1,16 @@
 import 'package:flutter/material.dart';
 
-import '../utils/thermo.dart';
+import '../Widgets/thermo.dart';
 
-class FirstPage extends StatelessWidget {
+class FirstPage extends StatefulWidget {
   const FirstPage({super.key});
 
+  @override
+  State<FirstPage> createState() => _FirstPageState();
+}
+
+class _FirstPageState extends State<FirstPage> {
+  int i = 0;
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -24,49 +30,25 @@ class FirstPage extends StatelessWidget {
               ))
         ],
       ),
-      body: Center(
-        child: Container(
-          height: 490,
-          width: 100,
-          child: Stack(
-            children: [
-              Center(
-                child: Positioned(
-                  top: 0,
-                  child: Container(
-                    height: 300,
-                    width: 50,
-                    decoration: const BoxDecoration(
-                        color: Colors.black87,
-                        borderRadius: BorderRadius.only(topLeft: Radius.circular(25),topRight: Radius.circular(25))
-                    ),
-                  ),
-                ),
-              ),
-              Positioned(
-                  bottom: 0,
-                  child: Container(
-                    width: 100,
-                    height: 100,
-                    decoration: BoxDecoration(
-                      color: Colors.black87,
-                      borderRadius:  BorderRadius.all(Radius.circular(50)),
-                    ),
-                  )),
-              Center(
-                child: Container(
-                  width: 225,
-                ),
-              )
-            ],
+      body: Stack(
+        children: [
+        Positioned(
+        left: 25,
+        top: 50,
+        width: 125,
+        height: 400,
+        child: Card(
+          elevation: 6,
+          child: Thermo(
+            duration: const Duration(milliseconds: 1250),
+            color: i.isOdd? Colors.red : Colors.green,
+            value: i.isOdd? 0.9 : 0.1,
+            curve: Curves.easeInOut,
           ),
         ),
-        // child: ThermometerWidget(
-        //     borderColor: Colors.red,
-        //     innerColor: Colors.green,
-        //     indicatorColor: Colors.red,
-        //   ),
       ),
+      ]
+    ),
     );
   }
 }

@@ -15,6 +15,10 @@ class MyApp extends StatelessWidget {
     return GetMaterialApp(
       debugShowCheckedModeBanner: false,
       home: HomePage(),
+      theme: ThemeData(
+        fontFamily: 'Poppins',
+        backgroundColor :const Color(0xffF0E7D8),
+      ),
     );
   }
 }
