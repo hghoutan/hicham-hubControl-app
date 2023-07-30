@@ -1,5 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
+import 'package:hub_control/Widgets/home_button.dart';
+import 'package:hub_control/utils/dimension.dart';
 
+import '../Widgets/scale_controller.dart';
 import '../Widgets/thermo.dart';
 
 class FirstPage extends StatefulWidget {
@@ -15,7 +19,7 @@ class _FirstPageState extends State<FirstPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text("HubControle"),
+        title: const Text("HubControl"),
         backgroundColor: const Color(0xffF94892),
         leading: const Icon(
           Icons.menu,
@@ -32,23 +36,95 @@ class _FirstPageState extends State<FirstPage> {
       ),
       body: Stack(
         children: [
-        Positioned(
-        left: 25,
-        top: 50,
-        width: 125,
-        height: 400,
-        child: Card(
-          elevation: 6,
-          child: Thermo(
-            duration: const Duration(milliseconds: 1250),
-            color: i.isOdd? Colors.red : Colors.green,
-            value: i.isOdd? 0.9 : 0.1,
-            curve: Curves.easeInOut,
+          Positioned(
+            top: Dimension.getHeight(48),
+            right: Dimension.getHeight(48),
+            child: Stack(
+              children: [
+              Container(
+                width: Dimension.getHeight(180),
+                height: Dimension.getHeight(180),
+                child: const HomeButton(),
+              ),
+                SizedBox(
+                  width: Dimension.getHeight(180),
+                  height: Dimension.getHeight(180),
+                  child: Center(
+                    child: Container(
+                      width: Dimension.getHeight(150),
+                      height: Dimension.getHeight(150),
+                      child:  Column(
+                        children: [
+                          SizedBox(
+                            height: Dimension.getHeight(15),
+                          ),
+                          const Text(
+                            "Off",
+                            style: TextStyle(
+                              fontSize: 36,
+                              fontWeight: FontWeight.bold,
+                              fontFamily: 'Poppins',
+                              color: Colors.black87,
+                            ),
+                          ),
+                          SizedBox(
+                            height: Dimension.getHeight(10),
+                          ),
+                          const Text(
+                            "Turn on in",
+                            style: TextStyle(
+                              fontSize: 22,
+                              fontFamily: 'Poppins',
+                              fontWeight: FontWeight.bold,
+                              color: Colors.black87,
+                            ),
+                          ),
+                          const Text(
+                            "Mode",
+                            style: TextStyle(
+                              fontSize: 22,
+                              fontFamily: 'Poppins',
+                              fontWeight: FontWeight.bold,
+                              color: Colors.black87,
+                            ),
+                          ),
+                        ],
+                      )
+                    ),
+                  ),
+                ),
+            ]
+            ),
           ),
+          Center(
+            child: Stack(
+            children:[
+              Container(
+              width: Dimension.getWidth(120),
+              height: Dimension.getHeight(600),
+                child: const Thermometer(),
+              ),
+              Positioned(
+                  top:  Dimension.getHeight(600) * 0.5/6,
+                  left:Dimension.getWidth(120) * 1.5/6,
+                  bottom: Dimension.getHeight(600) * 1/6,
+                  child: Image.asset("assets/images/scale.png",fit: BoxFit.fill, )
+              ),
+              Container(
+                width: Dimension.getWidth(120),
+                height: Dimension.getHeight(600),
+                child: CustomPaint(
+                  foregroundPainter: ScaleController(),
+                ),
+              ),
+
+            ],
         ),
-      ),
-      ]
-    ),
+          ),
+        ]
+      )
     );
   }
 }
+
+

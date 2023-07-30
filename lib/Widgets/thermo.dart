@@ -1,92 +1,127 @@
-import 'package:flutter/cupertino.dart';
+import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
+import 'dart:ui' as ui;
 
-class Thermo extends ImplicitlyAnimatedWidget {
-  const Thermo({
-    super.key,
-    super.curve,
-    required this.color,
-    required this.value,
-    required super.duration,
-    super.onEnd,
-  });
-
-  final Color color;
-  final double value;
+class Thermometer extends StatefulWidget {
+  const Thermometer({super.key});
 
   @override
-  AnimatedWidgetBaseState<Thermo> createState() => _ThermoState();
+  State<Thermometer> createState() => _ThermometerPainterState();
 }
 
-class _ThermoState extends AnimatedWidgetBaseState<Thermo> {
-  ColorTween? _color;
-  Tween<double>? _value;
+class _ThermometerPainterState extends State<Thermometer> {
+   ui.Image? image;
+  @override
+  void initState() {
+    loadImage("assets/images/scale.png");
+    super.initState();
+  }
+
+  Future loadImage(String path) async{
+    final data = await rootBundle.load(path);
+    final bytes = data.buffer.asUint8List();
+    final image = await decodeImageFromList(bytes);
+    setState(() {
+      this.image = image;
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
-    return SizedBox.expand(
-      child: FittedBox(
-        child: CustomPaint(
-          size: const Size(18, 63),
-          painter: _ThermoPainter(
-            color: _color!.evaluate(animation)!,
-            value: _value!.evaluate(animation),
-          ),
-        ),
-      ),
-    );
-  }
-
-  @override
-  void forEachTween(TweenVisitor<dynamic> visitor) {
-    _color = visitor(_color, widget.color, (dynamic v) => ColorTween(begin: v)) as ColorTween?;
-    _value = visitor(_value, widget.value, (dynamic v) => Tween<double>(begin: v)) as Tween<double>?;
+    if (image != null) {
+      return CustomPaint(
+        foregroundPainter: ThermometerPainter(image!),
+      );
+    } else {
+      // You might want to show a placeholder or loading indicator here
+      return CircularProgressIndicator(); // Placeholder example
+    }
   }
 }
+class ThermometerPainter extends CustomPainter{
 
-class _ThermoPainter extends CustomPainter {
-  _ThermoPainter({
-    required this.color,
-    required this.value,
-  });
-
-  final Color color;
-  final double value;
+  late final ui.Image image;
+  ThermometerPainter( this.image);
 
   @override
   void paint(Canvas canvas, Size size) {
 
-    const bulbRadius = 6.0;
-    const smallRadius = 3.0;
-    const border = 1.0;
-    final rect = (Offset.zero & size);
-    final innerRect = rect.deflate(size.width / 2 - bulbRadius);
-    final r1 = Alignment.bottomCenter.inscribe(const Size(2 * smallRadius, bulbRadius * 2), innerRect);
-    final r2 = Alignment.center.inscribe(Size(2 * smallRadius, innerRect.height), innerRect);
+    //region paints
+    final c1Paint = Paint()
+      ..color =  Colors.black87;
+    final c2Paint = Paint()
+      ..color = const Color(0xffffffff);
 
-    final bulb = Path()..addOval(Alignment.bottomCenter.inscribe(Size.square(innerRect.width), innerRect));
-    final outerPath = Path()
-      ..addOval(Alignment.bottomCenter.inscribe(Size.square(innerRect.width), innerRect).inflate(border))
-      ..addRRect(RRect.fromRectAndRadius(r2, const Radius.circular(smallRadius)).inflate(border));
+    final circle1Paint = Paint()
+      ..color = Colors.black87;
 
-    final scaleRect = Rect.fromPoints(innerRect.topLeft, innerRect.bottomRight - const Offset(0, 2 * bulbRadius));
-    Iterable<Offset> generatePoints() sync* {
-      for (int i = 0; i < 11; i++) {
-        final t = i / 10;
-        final point = i.isOdd?
-        Offset.lerp(scaleRect.bottomLeft, scaleRect.topLeft, t)! :
-        Offset.lerp(scaleRect.bottomRight, scaleRect.topRight, t)!;
-        yield point;
-        yield point.translate(i.isOdd? 2 : -2, 0);
-      }
-    }
+    final circle2Paint = Paint()
+      ..color = const Color(0xffffffff);
 
-    final valueRect = Rect.lerp(r1, r2, value)!;
-    final valuePaint = Paint()..color = color;
+    final addRemoveDegreePaint = Paint()
+      ..color = Colors.grey.shade300
+      ..strokeWidth = 10
+      ..strokeCap = StrokeCap.round
+      ..style = PaintingStyle.stroke;
 
-}
+
+
+    final imagePaint = Paint();
+    //endregion
+
+    //region First Container coordinates
+    var c1A = Offset(size.width * 1/6, 0);
+    var c1B = Offset(size.width * 5/6, size.height * 4.5/5);
+    //endregion
+
+    //region Second Container coordinates
+    var c2A = Offset(size.width * 1.5/6, size.height * 2/5);
+    var c2B = Offset(size.width * 4.5/6, size.height * 4.5/5);
+    //endregion
+
+
+    //region circle coordinate
+    final center = Offset(size.width * .5, (size.height * 1/5) * 4.45);
+    //endregion
+
+
+
+    final rect1 = Rect.fromPoints(c1A, c1B);
+    final rect2 = Rect.fromPoints(c2A, c2B);
+
+    final addDegreePath = Path();
+    final removeDegreePath =Path();
+
+    //region AddDegreePath
+    addDegreePath.moveTo(size.width * 1/2 , size.height * 0.2/6);
+    addDegreePath.lineTo(size.width * 2/6, size.height * 0.5/6);
+    addDegreePath.moveTo(size.width * 1/2 , size.height * 0.2/6);
+    addDegreePath.lineTo(size.width * 4/6, size.height * 0.5/6);
+    //endregion
+
+    // region RemoveDegreePath
+    removeDegreePath.moveTo(size.width * 1/2 , (size.height * 4/5) + ((size.height * 1.1/5) / 2 ));
+    removeDegreePath.lineTo(size.width * 2/6, (size.height * 4/5) + ((size.height * 0.6/5) / 2 ) );
+    removeDegreePath.moveTo(size.width * 1/2 , (size.height * 4/5) + ((size.height * 1.1/5) / 2 ));
+    removeDegreePath.lineTo(size.width * 4/6, (size.height * 4/5) + ((size.height * 0.6/5) / 2 ) );
+    //endregion
+
+    
+    var scale = Offset(size.width * 1.5/6, size.height * 0.5/6);
+
+
+    canvas.drawRRect(RRect.fromRectAndCorners(rect1,topRight:Radius.circular((size.width * 4/6 ) * .5 ),topLeft: Radius.circular((size.width * 4/6 ) * .5)), c1Paint);
+    canvas.drawCircle(center, size.width * 1/2, circle1Paint);
+    canvas.drawRRect(RRect.fromRectAndCorners(rect2,topRight:Radius.circular((size.width * 3/6 ) * .5 ),topLeft: Radius.circular((size.width * 3/6 ) * .5)), c2Paint);
+    canvas.drawCircle(center, size.width * .40, circle2Paint);
+    canvas.drawPath(addDegreePath, addRemoveDegreePaint);
+    canvas.drawPath(removeDegreePath, addRemoveDegreePaint);
+
+    // canvas.drawImage(image, scale,imagePaint);
+  }
 
   @override
   bool shouldRepaint(covariant CustomPainter oldDelegate) {
-    return true;
+    return false;
   }
 }

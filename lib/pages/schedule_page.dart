@@ -36,6 +36,7 @@ class _SchedulePageState extends State<SchedulePage> {
       controller: _controller,
     );
     List<Widget> hours() => [
+      const UsedText(text: "12 AM"),
       const UsedText(text: "1 AM"),
       const UsedText(text: "2 AM"),
       const UsedText(text: "3 AM"),
