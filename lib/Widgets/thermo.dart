@@ -60,7 +60,7 @@ class ThermometerPainter extends CustomPainter{
 
     final addRemoveDegreePaint = Paint()
       ..color = Colors.grey.shade300
-      ..strokeWidth = 10
+      ..strokeWidth = size.width / 10
       ..strokeCap = StrokeCap.round
       ..style = PaintingStyle.stroke;
 
@@ -118,6 +118,7 @@ class ThermometerPainter extends CustomPainter{
     canvas.drawPath(removeDegreePath, addRemoveDegreePaint);
 
     // canvas.drawImage(image, scale,imagePaint);
+
   }
 
   @override

@@ -3,8 +3,8 @@ import 'package:flutter/services.dart';
 import 'package:hub_control/Widgets/home_button.dart';
 import 'package:hub_control/utils/dimension.dart';
 
-import '../Widgets/scale_controller.dart';
-import '../Widgets/thermo.dart';
+import '../Widgets/home_thermometer.dart';
+
 
 class FirstPage extends StatefulWidget {
   const FirstPage({super.key});
@@ -34,95 +34,71 @@ class _FirstPageState extends State<FirstPage> {
               ))
         ],
       ),
-      body: Stack(
-        children: [
-          Positioned(
-            top: Dimension.getHeight(48),
-            right: Dimension.getHeight(48),
-            child: Stack(
-              children: [
-              Container(
-                width: Dimension.getHeight(180),
-                height: Dimension.getHeight(180),
-                child: const HomeButton(),
-              ),
-                SizedBox(
-                  width: Dimension.getHeight(180),
-                  height: Dimension.getHeight(180),
-                  child: Center(
-                    child: Container(
-                      width: Dimension.getHeight(150),
-                      height: Dimension.getHeight(150),
-                      child:  Column(
-                        children: [
-                          SizedBox(
-                            height: Dimension.getHeight(15),
-                          ),
-                          const Text(
-                            "Off",
-                            style: TextStyle(
-                              fontSize: 36,
-                              fontWeight: FontWeight.bold,
-                              fontFamily: 'Poppins',
-                              color: Colors.black87,
-                            ),
-                          ),
-                          SizedBox(
-                            height: Dimension.getHeight(10),
-                          ),
-                          const Text(
-                            "Turn on in",
-                            style: TextStyle(
-                              fontSize: 22,
-                              fontFamily: 'Poppins',
-                              fontWeight: FontWeight.bold,
-                              color: Colors.black87,
-                            ),
-                          ),
-                          const Text(
-                            "Mode",
-                            style: TextStyle(
-                              fontSize: 22,
-                              fontFamily: 'Poppins',
-                              fontWeight: FontWeight.bold,
-                              color: Colors.black87,
-                            ),
-                          ),
-                        ],
-                      )
-                    ),
-                  ),
-                ),
-            ]
+      body: Container(
+          decoration: const BoxDecoration(
+            image: DecorationImage(
+              image: AssetImage("assets/images/background.jpg"),
+              fit: BoxFit.cover,
             ),
           ),
-          Center(
-            child: Stack(
-            children:[
-              Container(
-              width: Dimension.getWidth(120),
-              height: Dimension.getHeight(600),
-                child: const Thermometer(),
-              ),
-              Positioned(
-                  top:  Dimension.getHeight(600) * 0.5/6,
-                  left:Dimension.getWidth(120) * 1.5/6,
-                  bottom: Dimension.getHeight(600) * 1/6,
-                  child: Image.asset("assets/images/scale.png",fit: BoxFit.fill, )
-              ),
-              Container(
-                width: Dimension.getWidth(120),
-                height: Dimension.getHeight(600),
-                child: CustomPaint(
-                  foregroundPainter: ScaleController(),
-                ),
-              ),
+          child: Column(
+          children: [
+            SizedBox(height: Dimension.getScreenHeight() * 6/100),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.end,
+              children: [
+                const HomeButton(),
+                SizedBox(width: Dimension.getScreenWidth() * 6/100 ),
 
-            ],
-        ),
-          ),
-        ]
+              ],
+            ),
+            SizedBox(height: Dimension.getScreenHeight() * 5/100),
+             Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              crossAxisAlignment: CrossAxisAlignment.end,
+              children: [
+                const HomeThermometer(),
+                SizedBox(width: Dimension.getScreenWidth() * 10/100,),
+                Column(
+                  mainAxisAlignment: MainAxisAlignment.end,
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text("SET TO" ,style: TextStyle(fontSize: Dimension.getScreenHeight() * 4/100,fontWeight: FontWeight.w300,)),
+                    Row(
+                        crossAxisAlignment: CrossAxisAlignment.center,
+                        children: [
+                          Text("86",style: TextStyle(color: Colors.black54,fontFamily: 'Poppins',fontSize: Dimension.getScreenHeight() * 8/100,fontWeight: FontWeight.w500)),
+                          Column(
+                            children: [
+                              Text("°",style: TextStyle(color: Colors.black54,fontFamily: 'Poppins',fontSize: Dimension.getScreenHeight() * 8/100,fontWeight: FontWeight.w500)),
+                            ],
+                          ),
+                          Text(".",style: TextStyle(color: Colors.black54,fontFamily: 'Poppins',fontSize: Dimension.getScreenHeight() * 5/100,fontWeight: FontWeight.w500)),
+                          Text("8",style: TextStyle(color: Colors.black54,fontFamily: 'Poppins',fontSize: Dimension.getScreenHeight() * 5/100,fontWeight: FontWeight.w500)),
+                        ]
+                    ),
+                    Text("INSIDE TEMP" ,style: TextStyle(fontSize: Dimension.getScreenHeight() * 4/100,fontWeight: FontWeight.w300,)),
+                    Row(
+                      crossAxisAlignment: CrossAxisAlignment.center,
+                      children: [
+                        Text("68",style: TextStyle(color: Colors.black87,fontFamily: 'Poppins',fontSize: Dimension.getScreenHeight() * 9.5/100,fontWeight: FontWeight.w500)),
+                        Column(
+                          children: [
+                            Text("°",style: TextStyle(color: Colors.black87,fontFamily: 'Poppins',fontSize: Dimension.getScreenHeight() * 9.5/100,fontWeight: FontWeight.w500)),
+                          ],
+                        ),
+                        Text(".",style: TextStyle(color: Colors.black87,fontFamily: 'Poppins',fontSize: Dimension.getScreenHeight() * 6/100,fontWeight: FontWeight.w500)),
+                        Text("0",style: TextStyle(color: Colors.black87,fontFamily: 'Poppins',fontSize: Dimension.getScreenHeight() * 9.5/100,fontWeight: FontWeight.w500)),
+                        ]
+                        ),
+                      ],
+                    ),
+                  ],
+                ),
+              ],
+            ),
       )
+
     );
   }
 }

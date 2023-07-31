@@ -40,6 +40,7 @@ dependencies:
   lite_rolling_switch: ^1.0.1
   flutter_advanced_switch: ^3.0.1
   image: ^4.0.17
+  tuple: ^2.0.2
 
 dev_dependencies:
   flutter_test:
@@ -87,6 +88,8 @@ flutter:
           weight: 800
         - asset: fonts/Poppins-SemiBold.ttf
           weight: 600
+        - asset: fonts/Poppins-Light.ttf
+          weight: 300
   #       - asset: fonts/Schyler-Italic.ttf
   #         style: italic
   #   - family: Trajan Pro

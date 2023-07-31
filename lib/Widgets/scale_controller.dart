@@ -5,7 +5,7 @@ class ScaleController extends CustomPainter{
   @override
   void paint(Canvas canvas, Size size) {
     final linePaint = Paint()
-      ..strokeWidth = 20
+      ..strokeWidth = size.width / 4.4
       ..color = Colors.grey.shade300
       ..strokeCap = StrokeCap.round;
 
