@@ -28,14 +28,14 @@ class _ThermometerPainterState extends State<Thermometer> {
 
   @override
   Widget build(BuildContext context) {
-    if (image != null) {
-      return CustomPaint(
-        foregroundPainter: ThermometerPainter(image!),
-      );
-    } else {
-      // You might want to show a placeholder or loading indicator here
-      return CircularProgressIndicator(); // Placeholder example
-    }
+      if (image != null) {
+        return CustomPaint(
+                foregroundPainter: ThermometerPainter(image!),
+              );
+      } else {
+        return CircularProgressIndicator();
+
+      }
   }
 }
 class ThermometerPainter extends CustomPainter{
@@ -58,11 +58,7 @@ class ThermometerPainter extends CustomPainter{
     final circle2Paint = Paint()
       ..color = const Color(0xffffffff);
 
-    final addRemoveDegreePaint = Paint()
-      ..color = Colors.grey.shade300
-      ..strokeWidth = size.width / 10
-      ..strokeCap = StrokeCap.round
-      ..style = PaintingStyle.stroke;
+
 
 
 
@@ -89,35 +85,15 @@ class ThermometerPainter extends CustomPainter{
     final rect1 = Rect.fromPoints(c1A, c1B);
     final rect2 = Rect.fromPoints(c2A, c2B);
 
-    final addDegreePath = Path();
-    final removeDegreePath =Path();
 
-    //region AddDegreePath
-    addDegreePath.moveTo(size.width * 1/2 , size.height * 0.2/6);
-    addDegreePath.lineTo(size.width * 2/6, size.height * 0.5/6);
-    addDegreePath.moveTo(size.width * 1/2 , size.height * 0.2/6);
-    addDegreePath.lineTo(size.width * 4/6, size.height * 0.5/6);
-    //endregion
 
-    // region RemoveDegreePath
-    removeDegreePath.moveTo(size.width * 1/2 , (size.height * 4/5) + ((size.height * 1.1/5) / 2 ));
-    removeDegreePath.lineTo(size.width * 2/6, (size.height * 4/5) + ((size.height * 0.6/5) / 2 ) );
-    removeDegreePath.moveTo(size.width * 1/2 , (size.height * 4/5) + ((size.height * 1.1/5) / 2 ));
-    removeDegreePath.lineTo(size.width * 4/6, (size.height * 4/5) + ((size.height * 0.6/5) / 2 ) );
-    //endregion
-
-    
-    var scale = Offset(size.width * 1.5/6, size.height * 0.5/6);
 
 
     canvas.drawRRect(RRect.fromRectAndCorners(rect1,topRight:Radius.circular((size.width * 4/6 ) * .5 ),topLeft: Radius.circular((size.width * 4/6 ) * .5)), c1Paint);
     canvas.drawCircle(center, size.width * 1/2, circle1Paint);
     canvas.drawRRect(RRect.fromRectAndCorners(rect2,topRight:Radius.circular((size.width * 3/6 ) * .5 ),topLeft: Radius.circular((size.width * 3/6 ) * .5)), c2Paint);
     canvas.drawCircle(center, size.width * .40, circle2Paint);
-    canvas.drawPath(addDegreePath, addRemoveDegreePaint);
-    canvas.drawPath(removeDegreePath, addRemoveDegreePaint);
 
-    // canvas.drawImage(image, scale,imagePaint);
 
   }
 

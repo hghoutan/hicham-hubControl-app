@@ -14,7 +14,17 @@ class FirstPage extends StatefulWidget {
 }
 
 class _FirstPageState extends State<FirstPage> {
+  List<String> stateMode = ["Off","Boost","Cool"];
+  List<String> keywords = ["Touch to","set temp","set temp"];
+  List<String> keywords2 = ["turn ON","reached","reached"];
+  List<Color> colors = [Colors.black45,Colors.blue,Colors.blue.shade700];
+  late int _i ;
   int i = 0;
+  @override
+  void initState() {
+    super.initState();
+    _i = 0;
+  }
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -47,7 +57,19 @@ class _FirstPageState extends State<FirstPage> {
             Row(
               mainAxisAlignment: MainAxisAlignment.end,
               children: [
-                const HomeButton(),
+                GestureDetector(
+                  onTap: (){
+                    if (_i < 2) {
+                      setState(() {
+                        _i++;
+                      });
+                    }else{
+                      setState(() {
+                        _i=0 ;
+                      });
+                    }
+                  },
+                  child: HomeButton(color: colors[_i],state: stateMode[_i],keyword: keywords[_i],keyword2: keywords2[_i]),),
                 SizedBox(width: Dimension.getScreenWidth() * 6/100 ),
 
               ],
@@ -57,8 +79,8 @@ class _FirstPageState extends State<FirstPage> {
               mainAxisAlignment: MainAxisAlignment.center,
               crossAxisAlignment: CrossAxisAlignment.end,
               children: [
-                const HomeThermometer(),
-                SizedBox(width: Dimension.getScreenWidth() * 10/100,),
+                  const HomeThermometer(),
+                  SizedBox(width: Dimension.getScreenWidth() * 10/100,),
                 Column(
                   mainAxisAlignment: MainAxisAlignment.end,
                   crossAxisAlignment: CrossAxisAlignment.start,
@@ -67,14 +89,14 @@ class _FirstPageState extends State<FirstPage> {
                     Row(
                         crossAxisAlignment: CrossAxisAlignment.center,
                         children: [
-                          Text("86",style: TextStyle(color: Colors.black54,fontFamily: 'Poppins',fontSize: Dimension.getScreenHeight() * 8/100,fontWeight: FontWeight.w500)),
+                          Text("86",style: TextStyle(color: colors[_i],fontFamily: 'Poppins',fontSize: Dimension.getScreenHeight() * 8/100,fontWeight: FontWeight.w500)),
                           Column(
                             children: [
-                              Text("°",style: TextStyle(color: Colors.black54,fontFamily: 'Poppins',fontSize: Dimension.getScreenHeight() * 8/100,fontWeight: FontWeight.w500)),
+                              Text("°",style: TextStyle(color: colors[_i],fontFamily: 'Poppins',fontSize: Dimension.getScreenHeight() * 8/100,fontWeight: FontWeight.w500)),
                             ],
                           ),
-                          Text(".",style: TextStyle(color: Colors.black54,fontFamily: 'Poppins',fontSize: Dimension.getScreenHeight() * 5/100,fontWeight: FontWeight.w500)),
-                          Text("8",style: TextStyle(color: Colors.black54,fontFamily: 'Poppins',fontSize: Dimension.getScreenHeight() * 5/100,fontWeight: FontWeight.w500)),
+                          Text(".",style: TextStyle(color: colors[_i],fontFamily: 'Poppins',fontSize: Dimension.getScreenHeight() * 5/100,fontWeight: FontWeight.w500)),
+                          Text("8",style: TextStyle(color: colors[_i],fontFamily: 'Poppins',fontSize: Dimension.getScreenHeight() * 5/100,fontWeight: FontWeight.w500)),
                         ]
                     ),
                     Text("INSIDE TEMP" ,style: TextStyle(fontSize: Dimension.getScreenHeight() * 4/100,fontWeight: FontWeight.w300,)),

@@ -3,26 +3,39 @@ import 'package:flutter/material.dart';
 import '../utils/dimension.dart';
 
 class HomeButton extends StatefulWidget {
-  const HomeButton({super.key});
+  Color color;
+  String state;
+  String keyword;
+  String keyword2;
+
+  HomeButton({super.key,required this.color,required this.state, required this.keyword, required this.keyword2});
 
   @override
   State<HomeButton> createState() => _HomeButtonState();
 }
 
 class _HomeButtonState extends State<HomeButton> {
+
+
+
+  @override
+  void initState() {
+    super.initState();
+
+  }
   @override
   Widget build(BuildContext context) {
     return  Stack(
         children: [
           Container(
-            width: Dimension.getScreenHeight() * 13/100,
-            height: Dimension.getScreenHeight() * 13/100,
+            width: Dimension.getScreenHeight() * 15/100,
+            height: Dimension.getScreenHeight() * 15/100,
             child: CustomPaint(
-                  foregroundPainter: HomeButtonPainter()),
+                  foregroundPainter: HomeButtonPainter( color:widget.color,)),
           ),
           SizedBox(
-            width: Dimension.getScreenHeight() * 13/100,
-            height: Dimension.getScreenHeight() * 13/100,
+            width: Dimension.getScreenHeight() * 15/100,
+            height: Dimension.getScreenHeight() * 15/100,
             child: Center(
               child: Container(
                  width: Dimension.getScreenHeight() * 10.5/100,
@@ -33,7 +46,7 @@ class _HomeButtonState extends State<HomeButton> {
                         height: Dimension.getScreenHeight() * 1/100,
                       ),
                        Text(
-                        "Off",
+                        widget.state,
                         style: TextStyle(
                           fontSize: Dimension.getScreenWidth() * 5/100,
                           fontWeight: FontWeight.bold,
@@ -41,9 +54,9 @@ class _HomeButtonState extends State<HomeButton> {
                           color: Colors.black87,
                         ),
                       ),
-                    
+
                        Text(
-                        "Turn on in",
+                        widget.keyword,
                         style: TextStyle(
                           fontSize: Dimension.getScreenWidth() * 3/100,
                           fontFamily: 'Poppins',
@@ -52,7 +65,7 @@ class _HomeButtonState extends State<HomeButton> {
                         ),
                       ),
                        Text(
-                        "Mode",
+                         widget.keyword2,
                         style: TextStyle(
                           fontSize: Dimension.getScreenWidth() * 3/100,
                           fontFamily: 'Poppins',
@@ -73,7 +86,8 @@ class _HomeButtonState extends State<HomeButton> {
   }
 }
 class HomeButtonPainter  extends CustomPainter{
-
+  Color color;
+  HomeButtonPainter({required this.color});
   @override
   void paint(Canvas canvas, Size size) {
 
@@ -83,15 +97,15 @@ class HomeButtonPainter  extends CustomPainter{
     var center = Offset(size.width * 1/2, size.height * 1/2);
 
     //region draw shadow
-    var path = Path();
-    path.addOval(Rect.fromCircle(center: center, radius: size.width * 1/2 + 10));
-    canvas.drawShadow(path, Color(0xff000000), 3, true);
+    // var path = Path();
+    // path.addOval(Rect.fromCircle(center: center, radius: size.width * 1/2 + 10));
+    // canvas.drawShadow(path, color, 3, true);
     //endregion
 
     canvas.drawCircle(center, size.width * .5, circlePaint);
 
     Paint firstHalfPaint = Paint()
-      ..color = Colors.black87
+      ..color = color
       ..strokeWidth = size.width / 7
       ..style = PaintingStyle.stroke
     ;
@@ -100,12 +114,11 @@ class HomeButtonPainter  extends CustomPainter{
       ..strokeWidth = size.width / 7
       ..style = PaintingStyle.stroke
     ;
-
     canvas.drawArc(
       Rect.fromCenter(
         center: Offset(size.height / 2, size.width / 2),
-        height: size.height,
-        width: size.width,
+        height: size.height + (10/100  * size.height),
+        width: size.width + (10/100  * size.height),
       ),
       3.14 / 2,
       3.14,
@@ -115,8 +128,8 @@ class HomeButtonPainter  extends CustomPainter{
     canvas.drawArc(
       Rect.fromCenter(
         center: Offset(size.height / 2, size.width / 2),
-        height: size.height,
-        width: size.width,
+        height: size.height + (10/100  * size.height),
+        width: size.width + (10/100  * size.height),
       ),
       (3 * 3.14) / 2,
       3.14  ,

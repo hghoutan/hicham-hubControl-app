@@ -18,7 +18,7 @@ class SchedulePage extends StatefulWidget {
 class _SchedulePageState extends State<SchedulePage> {
   late var _controller;
   bool _checked = false;
-
+  late String json;
   @override
   void initState() {
     super.initState();
@@ -27,11 +27,17 @@ class _SchedulePageState extends State<SchedulePage> {
       setState(() {
         if (_controller.value) {
           _checked = true;
+
         } else {
           _checked = false;
         }
       });
     });
+     json = """
+    [
+ {"StTime":50,"ComfortSetting":"Home"}
+   ]
+""";
   }
 
   @override
@@ -121,57 +127,36 @@ class _SchedulePageState extends State<SchedulePage> {
           ),
         ];
 
-    String json = """
-    [
- {"StTime":5,"ComfortSetting":"Off"},
- {"StTime":1080,"ComfortSetting":"Sleep"},
- {"StTime":1460,"ComfortSetting":"Home"},
- {"StTime":2000,"ComfortSetting":"Away"},
- {"StTime":2560,"ComfortSetting":"Home"},
- {"StTime":2800,"ComfortSetting":"Sleep"},
- {"StTime":3400,"ComfortSetting":"Away"},
- {"StTime":3460,"ComfortSetting":"Home"},
- {"StTime":3800,"ComfortSetting":"Sleep"},
- {"StTime":4200,"ComfortSetting":"Off"},
- {"StTime":4330,"ComfortSetting":"Sleep"},
- {"StTime":4700,"ComfortSetting":"Away"},
- {"StTime":5785,"ComfortSetting":"Off"},
- {"StTime":5894,"ComfortSetting":"Home"},
- {"StTime":6798,"ComfortSetting":"Sleep"}
-   ]
-""";
+
 
     List<Time> mondayTimes = [];
-
     List<Time> tuesdayTimes = [];
-
     List<Time> wednesdayTimes =[];
     List<Time> thursdayTimes = [];
     List<Time> fridayTimes = [];
     List<Time> sundayTimes = [];
     List<Time> saturdayTimes =[];
 
+    Time mondOldTime ;
     List<dynamic>  data = jsonDecode(json);
     for(var i=0;i<=data.length-1;i++){
       if (int.parse(data[i]['StTime'].toString())>=0 && int.parse(data[i]['StTime'].toString())<= 1440) {
         mondayTimes.add(Time(stTime: int.parse(data[i]['StTime'].toString()),comfortSetting: data[i]["ComfortSetting"]));
       }
       else if (int.parse(data[i]['StTime'].toString())<= 2880){
-        tuesdayTimes.add(Time(stTime: int.parse((data[i]['StTime'] - 1440).toString()),comfortSetting: data[i]["ComfortSetting"]));
+        // tuesdayTimes.add(Time(stTime: int.parse((data[i]['StTime'] - 1440).toString()),comfortSetting: data[i]["ComfortSetting"]));
       }else if (int.parse(data[i]['StTime'].toString())<= 4320){
-        wednesdayTimes.add(Time(stTime: int.parse((data[i]['StTime'] - (1440 * 2)).toString()),comfortSetting: data[i]["ComfortSetting"]));
+        // wednesdayTimes.add(Time(stTime: int.parse((data[i]['StTime'] - (1440 * 2)).toString()),comfortSetting: data[i]["ComfortSetting"]));
       }else if (int.parse(data[i]['StTime'].toString())<= 5760) {
-        thursdayTimes.add(Time(stTime: int.parse((data[i]['StTime'] - (1440 * 3)).toString()),comfortSetting: data[i]["ComfortSetting"]));
+        // thursdayTimes.add(Time(stTime: int.parse((data[i]['StTime'] - (1440 * 3)).toString()),comfortSetting: data[i]["ComfortSetting"]));
       }else if (int.parse(data[i]['StTime'].toString())<= 7200) {
-        fridayTimes.add(Time(stTime: int.parse((data[i]['StTime'] - (1440 * 4)).toString()),comfortSetting: data[i]["ComfortSetting"]));
+        // fridayTimes.add(Time(stTime: int.parse((data[i]['StTime'] - (1440 * 4)).toString()),comfortSetting: data[i]["ComfortSetting"]));
       }else if(int.parse(data[i]['StTime'].toString())<= 8640){
-        sundayTimes.add(Time(stTime: int.parse((data[i]['StTime'] - (1440 * 5)).toString()),comfortSetting: data[i]["ComfortSetting"]));
+        // sundayTimes.add(Time(stTime: int.parse((data[i]['StTime'] - (1440 * 5)).toString()),comfortSetting: data[i]["ComfortSetting"]));
       }else{
-        saturdayTimes.add(Time(stTime: int.parse((data[i]['StTime'] - (1440 * 6)).toString()),comfortSetting: data[i]["ComfortSetting"]));
-
+        // saturdayTimes.add(Time(stTime: int.parse((data[i]['StTime'] - (1440 * 6)).toString()),comfortSetting: data[i]["ComfortSetting"]));
       }
     }
-    print(thursdayTimes[0].stTime);
     return Scaffold(
       appBar: AppBar(
         title: const Text(
@@ -183,11 +168,93 @@ class _SchedulePageState extends State<SchedulePage> {
           size: 26,
         ),
         actions:  [
-          const Padding(
-              padding: EdgeInsets.all(12.0),
-              child: Icon(
-                Icons.delete,
-                size: 26,
+           Padding(
+              padding: const EdgeInsets.all(12.0),
+              child: InkWell(
+                onTap: (){
+                  showDialog(context: context, barrierDismissible: false,builder: (BuildContext context){
+                    return  AlertDialog(
+                      backgroundColor: Colors.white,
+                      title: Icon(Icons.error,color: Colors.red.shade900,size: 32),
+                      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(32)),
+
+                      actions:  [
+                        Column(
+                          children: [
+                            const Text("Delete Schedule",style: TextStyle(
+                                fontWeight: FontWeight.bold,
+                                fontFamily: 'Poppins',
+                                fontSize: 32
+                            )),
+                            const Padding(
+                              padding: EdgeInsets.symmetric(horizontal: 16,vertical: 16),
+                              child: Text(
+                                'all events from your schedule will be permanently deleted. Are you sure you want to delete your schedule?',
+                                style: TextStyle(
+                                  fontSize: 16,
+                                  color: Colors.black54,
+                                  fontFamily: 'Poppins'
+                                ),
+                              ),
+                            ),
+                            Padding(
+                              padding: const EdgeInsets.symmetric(vertical: 16),
+                              child: Row(
+                                crossAxisAlignment: CrossAxisAlignment.center,
+                                children: [
+                                  Expanded(
+                                    child: Center(
+                                      child: GestureDetector(
+                                        onTap: (){
+                                          Navigator.of(context).pop();
+                                        },
+                                        child: const Text(
+                                          "Cancel",
+                                          style: TextStyle(
+                                            fontWeight: FontWeight.w300,
+                                            fontSize: 24
+                                          ),
+                                        ),
+                                      ),
+                                    ),
+                                  ),
+                                  Expanded(
+                                    child: Center(
+                                      child: GestureDetector(
+                                        onTap: (){
+                                          setState(() {
+                                            json = """
+                                            []
+                                            """;
+                                          });
+                                          Navigator.of(context).pop();
+                                        },
+                                        child: const Text(
+                                          "Delete",
+                                          style: TextStyle(
+                                            fontWeight: FontWeight.w300,
+                                            fontSize: 24,
+                                            color: Color(0xffF94892),
+                                          ),
+                                        ),
+                                      ),
+                                    ),
+                                  ),
+                                ],
+
+                              ),
+                            )
+                          ],
+                        )
+                      ],
+
+                    );
+                  });
+                },
+                child: const Icon(
+                  Icons.delete,
+                  size: 26,
+                ),
               )),
           Padding(
               padding: const EdgeInsets.all(12.0),
@@ -204,115 +271,134 @@ class _SchedulePageState extends State<SchedulePage> {
       body: SingleChildScrollView(
         child: Column(
           children: [
-            Padding(
-              padding: EdgeInsets.symmetric(vertical: Dimension.getHeight(26)),
-              child: Row(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Container(
-                    padding: EdgeInsets.only(left: Dimension.getWidth(16)),
-                    width: Dimension.getScreenWidth() * .15,
-                  ),
-                  Container(
-                    width: Dimension.getScreenWidth() * .85,
-                    padding: EdgeInsets.only(
-                        left: Dimension.getWidth(16),
-                        right: Dimension.getWidth(26)),
-                    child: const Row(
-                      crossAxisAlignment: CrossAxisAlignment.end,
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        Expanded(
-                          child: UsedText(text: "Mon"),
-                        ),
-                        Expanded(
-                          child: UsedText(text: "Tue"),
-                        ),
-                        Expanded(
-                          child: UsedText(text: "Wed"),
-                        ),
-                        Expanded(
-                          child: UsedText(text: "Thu"),
-                        ),
-                        Expanded(
-                          child: UsedText(text: "Fri"),
-                        ),
-                        Expanded(
-                          child: UsedText(text: "Sat"),
-                        ),
-                        Expanded(
-                          child: UsedText(text: "Sun"),
-                        ),
-                      ],
-                    ),
-                  ),
-                ],
-              ),
-            ),
             SizedBox(
-              height: Dimension.getScreenHeight() * .7,
+              height: Dimension.getScreenHeight() * .8,
               child: Row(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Container(
                     padding: EdgeInsets.only(left: Dimension.getWidth(8)),
+                    height: Dimension.getScreenHeight() *.8,
                     width: Dimension.getScreenWidth() * .15,
                     child: Center(
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.end,
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
+                          Container(height: Dimension.getScreenHeight() * 8/100,child: const UsedText(text: "")),
                           ...hours(),
                         ],
                       ),
                     ),
                   ),
                   Container(
-                    height: Dimension.getScreenHeight() * .7,
+                    height: Dimension.getScreenHeight() *.8,
                     width: Dimension.getScreenWidth() * .85,
                     padding: EdgeInsets.only(
-                        left: Dimension.getWidth(16),
                         right: Dimension.getWidth(26)),
                     child:   Row(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
                         Expanded(
-                          child: DayColumn(times: mondayTimes),
-                        ),
-                        Expanded(
-                          child: DayColumn(
-                              times: tuesdayTimes,
-                              oldTime: mondayTimes[mondayTimes.length - 1]),
-                        ),
-                        Expanded(
-                          child: DayColumn(
-                            times: wednesdayTimes,
-                            oldTime:  tuesdayTimes[tuesdayTimes.length - 1] ,
+                          child: Column(
+                            children: [
+                              Container(
+                                height: Dimension.getScreenHeight() * 8/100,
+                                child: Center(child: const UsedText(text: "Mon")),
+                              ),
+                              Container(height: Dimension.getScreenHeight() * 72/100,child: DayColumn(times: mondayTimes,disable: _checked)),
+                            ],
                           ),
                         ),
                         Expanded(
-                          child: DayColumn(
-                            times: thursdayTimes,
-                            oldTime: wednesdayTimes[wednesdayTimes.length - 1] ,
+                          child: Column(
+                            children: [
+                              Container(
+                                height: Dimension.getScreenHeight() * 8/100,
+                                child: Center(child: const UsedText(text: "Tue")),
+                              ),
+                              Container(
+                                height: Dimension.getScreenHeight() * 72/100,
+                                child: DayColumn(
+                                    times: tuesdayTimes,
+                                    // oldTime: mondayTimes.length > 0 ? mondayTimes[mondayTimes.length - 1] : Time(stTime: 0,comfortSetting: "Off"),
+                                ),
+                              ),
+                            ],
                           ),
                         ),
                         Expanded(
-                          child: DayColumn(
-                            times : fridayTimes,
-                            // oldTime: thursdayTimes[wednesdayTimes.length - 1],
+                          child: Column(
+                            children: [
+                              Container(height: Dimension.getScreenHeight() * 8/100,child: Center(child: const UsedText(text: "Wed"))),
+                              Container(
+                                height: Dimension.getScreenHeight() * 72/100,
+                                child: DayColumn(
+                                  times: wednesdayTimes,
+                                    // oldTime: mondayTimes.length > 0 ? mondayTimes[mondayTimes.length - 1] : Time(stTime: 40,comfortSetting: "Off")
+                                ),
+                              ),
+                            ],
                           ),
                         ),
                         Expanded(
-                          child: DayColumn(
-                            times: sundayTimes,
-                            // oldTime: fridayTimes[mondayTimes.length - 1],
+                          child: Column(
+                            children: [
+                              Container(height: Dimension.getScreenHeight() * 8/100,child: Center(child: const UsedText(text: "Thu"))),
+                              Container(
+                                height: Dimension.getScreenHeight() * 72/100,
+                                child: DayColumn(
+                                  times: thursdayTimes,
+                                  // oldTime: wednesdayTimes[wednesdayTimes.length - 1] ,
+                                ),
+                              ),
+                            ],
                           ),
                         ),
                         Expanded(
-                          child: DayColumn(
-                            times: saturdayTimes,
-                            // oldTime: sundayTimes[mondayTimes.length - 1],
+                          child: Column(
+                            children: [
+                              Container(height: Dimension.getScreenHeight() * 8/100,child: Center(child: const UsedText(text: "Fri"))),
+                              Container(
+                                height: Dimension.getScreenHeight() * 72/100,
+                                child: DayColumn(
+                                  times : fridayTimes,
+                                  // oldTime: thursdayTimes[wednesdayTimes.length - 1],
+                                ),
+                              ),
+                            ],
+                          ),
+                        ),
+                        Expanded(
+                          child: Column(
+                            children: [
+                              Container(height: Dimension.getScreenHeight() * 8/100,child: Center(child: const UsedText(text: "Sun"))),
+                              Container(
+                                height: Dimension.getScreenHeight() * 72/100,
+                                child: DayColumn(
+                                  times: sundayTimes,
+                                  // oldTime: fridayTimes[mondayTimes.length - 1],
+                                ),
+                              ),
+                            ],
+                          ),
+                        ),
+                        Expanded(
+                          child: Column(
+                            children: [
+                              Container(
+                                  height: Dimension.getScreenHeight() * 8 / 100,
+                                  child: Center(
+                                      child: const UsedText(text: "Sat"))),
+                              Container(
+                                height: Dimension.getScreenHeight() * 72 / 100,
+                                child: DayColumn(
+                                  times: saturdayTimes,
+                                  // oldTime: sundayTimes[mondayTimes.length - 1],
+                                ),
+                              ),
+                            ],
                           ),
                         ),
                       ],
