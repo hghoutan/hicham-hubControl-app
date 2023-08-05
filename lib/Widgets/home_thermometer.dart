@@ -4,10 +4,13 @@ import 'package:hub_control/Widgets/paints/remove_button.dart';
 import 'package:hub_control/Widgets/paints/scale_controller.dart';
 import 'package:hub_control/Widgets/paints/thermo.dart';
 
+import '../pages/first_page.dart';
 import '../utils/dimension.dart';
+import '../Widgets/day_column.dart' as main;
 
 class HomeThermometer extends StatefulWidget {
-  const HomeThermometer({super.key});
+  final FirstPageState firstPage;
+  const HomeThermometer({super.key,required this.firstPage});
 
   @override
   State<HomeThermometer> createState() => _HomeThermometerState();
@@ -15,7 +18,7 @@ class HomeThermometer extends StatefulWidget {
 
 class _HomeThermometerState extends State<HomeThermometer> {
 
-  late int _i;
+  late double _i;
   @override
   void initState() {
     super.initState();
@@ -26,6 +29,7 @@ class _HomeThermometerState extends State<HomeThermometer> {
 
   @override
   Widget build(BuildContext context) {
+    Offset offset = Offset(Dimension.getScreenHeight() * 45/100 - Dimension.getScreenHeight() * _i/100, 0);
     return Container(
       width: Dimension.getScreenWidth() * 17/100,
       height: Dimension.getScreenHeight() * 45/100,
@@ -43,11 +47,36 @@ class _HomeThermometerState extends State<HomeThermometer> {
               child: Image.asset("assets/images/scale.png",fit: BoxFit.fill,)
           ),
           Positioned(
-            top: Dimension.getScreenHeight() * 45/100 - Dimension.getScreenHeight() * _i/100 ,
+            top: offset.dx,
+            left: 0,
             child: GestureDetector(
-              onHorizontalDragDown: (details) {
+              onPanUpdate: (details){
+                setState(() {
+                 if (details.delta.dy > 0) {
+                     setState(() {
+                       if (_i > 10) {
+                         _i = _i - details.delta.dy/10;
+                         widget.firstPage.setTemp(_i.floor());;
+                       }
+                     });
+
+
+                 }
+                 else{
+                   setState(() {
+                     if (_i < 40) {
+                       _i = _i - details.delta.dy/10;
+                       widget.firstPage.setTemp(_i.floor());
+                     }
+                   });
+
+
+                 }
+
+                });
               },
-              child: Container(
+              behavior: HitTestBehavior.translucent,
+              child: SizedBox(
                 width: Dimension.getScreenWidth() * 17/100,
                 height:20,
                 child: CustomPaint(
@@ -66,7 +95,10 @@ class _HomeThermometerState extends State<HomeThermometer> {
                   setState(() {
                     _i++;
                   });
+                  widget.firstPage.setTemp(_i.floor());
                 }
+
+
               },
               child: Container(
                 width: Dimension.getScreenHeight() * 4/100,
@@ -88,6 +120,8 @@ class _HomeThermometerState extends State<HomeThermometer> {
                   setState(() {
                     _i--;
                   });
+                  widget.firstPage.setTemp(_i.floor());
+
                 }
               },
               child: Container(

@@ -7,19 +7,35 @@ import '../Widgets/home_thermometer.dart';
 
 
 class FirstPage extends StatefulWidget {
+  // method() {
+  //   createState().methodInPage2();
+  // }
   const FirstPage({super.key});
 
   @override
-  State<FirstPage> createState() => _FirstPageState();
+  State<FirstPage> createState() => FirstPageState();
+
 }
 
-class _FirstPageState extends State<FirstPage> {
+class FirstPageState extends State<FirstPage> {
+  methodInPage2() => print("method in page 2");
+
   List<String> stateMode = ["Off","Boost","Cool"];
   List<String> keywords = ["Touch to","set temp","set temp"];
   List<String> keywords2 = ["turn ON","reached","reached"];
   List<Color> colors = [Colors.black45,Colors.blue,Colors.blue.shade700];
   late int _i ;
   int i = 0;
+
+  int temp = 40;
+
+  setTemp(int t){
+    setState(() {
+      temp = t * 2 ;
+    });
+  }
+
+
   @override
   void initState() {
     super.initState();
@@ -79,7 +95,7 @@ class _FirstPageState extends State<FirstPage> {
               mainAxisAlignment: MainAxisAlignment.center,
               crossAxisAlignment: CrossAxisAlignment.end,
               children: [
-                  const HomeThermometer(),
+                   HomeThermometer(firstPage: this,),
                   SizedBox(width: Dimension.getScreenWidth() * 10/100,),
                 Column(
                   mainAxisAlignment: MainAxisAlignment.end,
@@ -89,7 +105,7 @@ class _FirstPageState extends State<FirstPage> {
                     Row(
                         crossAxisAlignment: CrossAxisAlignment.center,
                         children: [
-                          Text("86",style: TextStyle(color: colors[_i],fontFamily: 'Poppins',fontSize: Dimension.getScreenHeight() * 8/100,fontWeight: FontWeight.w500)),
+                          Text(temp.toString(),style: TextStyle(color: colors[_i],fontFamily: 'Poppins',fontSize: Dimension.getScreenHeight() * 8/100,fontWeight: FontWeight.w500)),
                           Column(
                             children: [
                               Text("°",style: TextStyle(color: colors[_i],fontFamily: 'Poppins',fontSize: Dimension.getScreenHeight() * 8/100,fontWeight: FontWeight.w500)),
