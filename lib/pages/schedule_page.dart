@@ -34,9 +34,9 @@ class _SchedulePageState extends State<SchedulePage> {
       });
     });
      json = """
-    [
- {"StTime":50,"ComfortSetting":"Home"}
-   ]
+   [
+ {"StTime":60,"ComfortSetting":"Home"}
+]
 """;
   }
 
@@ -127,36 +127,17 @@ class _SchedulePageState extends State<SchedulePage> {
           ),
         ];
 
+    List<Time> times = [];
 
 
-    List<Time> mondayTimes = [];
-    List<Time> tuesdayTimes = [];
-    List<Time> wednesdayTimes =[];
-    List<Time> thursdayTimes = [];
-    List<Time> fridayTimes = [];
-    List<Time> sundayTimes = [];
-    List<Time> saturdayTimes =[];
 
-    Time mondOldTime ;
+
     List<dynamic>  data = jsonDecode(json);
-    for(var i=0;i<=data.length-1;i++){
-      if (int.parse(data[i]['StTime'].toString())>=0 && int.parse(data[i]['StTime'].toString())<= 1440) {
-        mondayTimes.add(Time(stTime: int.parse(data[i]['StTime'].toString()),comfortSetting: data[i]["ComfortSetting"]));
-      }
-      else if (int.parse(data[i]['StTime'].toString())<= 2880){
-        // tuesdayTimes.add(Time(stTime: int.parse((data[i]['StTime'] - 1440).toString()),comfortSetting: data[i]["ComfortSetting"]));
-      }else if (int.parse(data[i]['StTime'].toString())<= 4320){
-        // wednesdayTimes.add(Time(stTime: int.parse((data[i]['StTime'] - (1440 * 2)).toString()),comfortSetting: data[i]["ComfortSetting"]));
-      }else if (int.parse(data[i]['StTime'].toString())<= 5760) {
-        // thursdayTimes.add(Time(stTime: int.parse((data[i]['StTime'] - (1440 * 3)).toString()),comfortSetting: data[i]["ComfortSetting"]));
-      }else if (int.parse(data[i]['StTime'].toString())<= 7200) {
-        // fridayTimes.add(Time(stTime: int.parse((data[i]['StTime'] - (1440 * 4)).toString()),comfortSetting: data[i]["ComfortSetting"]));
-      }else if(int.parse(data[i]['StTime'].toString())<= 8640){
-        // sundayTimes.add(Time(stTime: int.parse((data[i]['StTime'] - (1440 * 5)).toString()),comfortSetting: data[i]["ComfortSetting"]));
-      }else{
-        // saturdayTimes.add(Time(stTime: int.parse((data[i]['StTime'] - (1440 * 6)).toString()),comfortSetting: data[i]["ComfortSetting"]));
-      }
+
+    for (var element in data) {
+      times.add(Time.fromJson(element));
     }
+
     return Scaffold(
       appBar: AppBar(
         title: const Text(
@@ -305,9 +286,17 @@ class _SchedulePageState extends State<SchedulePage> {
                             children: [
                               Container(
                                 height: Dimension.getScreenHeight() * 8/100,
-                                child: Center(child: const UsedText(text: "Mon")),
+                                child: const Center(child: UsedText(text: "Mon")),
                               ),
-                              Container(height: Dimension.getScreenHeight() * 72/100,child: DayColumn(times: mondayTimes,disable: _checked)),
+                              Container(
+                                  height:
+                                      Dimension.getScreenHeight() * 72 / 100,
+                                  child: DayColumn(
+                                    times: times,
+                                    day: 0,
+                                    disable: _checked,
+                                    isMonday: true,
+                                  )),
                             ],
                           ),
                         ),
@@ -316,13 +305,14 @@ class _SchedulePageState extends State<SchedulePage> {
                             children: [
                               Container(
                                 height: Dimension.getScreenHeight() * 8/100,
-                                child: Center(child: const UsedText(text: "Tue")),
+                                child: const Center(child: UsedText(text: "Tue")),
                               ),
                               Container(
                                 height: Dimension.getScreenHeight() * 72/100,
                                 child: DayColumn(
-                                    times: tuesdayTimes,
-                                    // oldTime: mondayTimes.length > 0 ? mondayTimes[mondayTimes.length - 1] : Time(stTime: 0,comfortSetting: "Off"),
+                                    times: times,
+                                    day: 1,
+                                    disable: _checked
                                 ),
                               ),
                             ],
@@ -331,12 +321,13 @@ class _SchedulePageState extends State<SchedulePage> {
                         Expanded(
                           child: Column(
                             children: [
-                              Container(height: Dimension.getScreenHeight() * 8/100,child: Center(child: const UsedText(text: "Wed"))),
+                              Container(height: Dimension.getScreenHeight() * 8/100,child: const Center(child: UsedText(text: "Wed"))),
                               Container(
                                 height: Dimension.getScreenHeight() * 72/100,
                                 child: DayColumn(
-                                  times: wednesdayTimes,
-                                    // oldTime: mondayTimes.length > 0 ? mondayTimes[mondayTimes.length - 1] : Time(stTime: 40,comfortSetting: "Off")
+                                  times: times,
+                                    day: 2,
+                                    disable: _checked
                                 ),
                               ),
                             ],
@@ -345,12 +336,13 @@ class _SchedulePageState extends State<SchedulePage> {
                         Expanded(
                           child: Column(
                             children: [
-                              Container(height: Dimension.getScreenHeight() * 8/100,child: Center(child: const UsedText(text: "Thu"))),
+                              Container(height: Dimension.getScreenHeight() * 8/100,child: const Center(child: UsedText(text: "Thu"))),
                               Container(
                                 height: Dimension.getScreenHeight() * 72/100,
                                 child: DayColumn(
-                                  times: thursdayTimes,
-                                  // oldTime: wednesdayTimes[wednesdayTimes.length - 1] ,
+                                  times: times,
+                                    day: 3,
+                                    disable: _checked
                                 ),
                               ),
                             ],
@@ -359,12 +351,13 @@ class _SchedulePageState extends State<SchedulePage> {
                         Expanded(
                           child: Column(
                             children: [
-                              Container(height: Dimension.getScreenHeight() * 8/100,child: Center(child: const UsedText(text: "Fri"))),
+                              Container(height: Dimension.getScreenHeight() * 8/100,child: const Center(child: UsedText(text: "Fri"))),
                               Container(
                                 height: Dimension.getScreenHeight() * 72/100,
                                 child: DayColumn(
-                                  times : fridayTimes,
-                                  // oldTime: thursdayTimes[wednesdayTimes.length - 1],
+                                  times : times,
+                                    day: 4,
+                                    disable: _checked
                                 ),
                               ),
                             ],
@@ -373,12 +366,14 @@ class _SchedulePageState extends State<SchedulePage> {
                         Expanded(
                           child: Column(
                             children: [
-                              Container(height: Dimension.getScreenHeight() * 8/100,child: Center(child: const UsedText(text: "Sun"))),
+                              Container(height: Dimension.getScreenHeight() * 8/100,
+                                  child: const Center(child: UsedText(text: "Sat"))),
                               Container(
                                 height: Dimension.getScreenHeight() * 72/100,
                                 child: DayColumn(
-                                  times: sundayTimes,
-                                  // oldTime: fridayTimes[mondayTimes.length - 1],
+                                  times: times,
+                                    day: 5,
+                                    disable: _checked
                                 ),
                               ),
                             ],
@@ -389,13 +384,14 @@ class _SchedulePageState extends State<SchedulePage> {
                             children: [
                               Container(
                                   height: Dimension.getScreenHeight() * 8 / 100,
-                                  child: Center(
-                                      child: const UsedText(text: "Sat"))),
+                                  child: const Center(
+                                      child: UsedText(text: "Sun"))),
                               Container(
                                 height: Dimension.getScreenHeight() * 72 / 100,
                                 child: DayColumn(
-                                  times: saturdayTimes,
-                                  // oldTime: sundayTimes[mondayTimes.length - 1],
+                                  times: times,
+                                    day: 6,
+                                    disable: _checked
                                 ),
                               ),
                             ],
