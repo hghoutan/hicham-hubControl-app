@@ -27,11 +27,11 @@ class FirstPageState extends State<FirstPage> {
   late int _i ;
   int i = 0;
 
-  int temp = 40;
+  int temp = 41;
 
   setTemp(int t){
     setState(() {
-      temp = t * 2 ;
+      temp = t ;
     });
   }
 
@@ -112,7 +112,7 @@ class FirstPageState extends State<FirstPage> {
                             ],
                           ),
                           Text(".",style: TextStyle(color: colors[_i],fontFamily: 'Poppins',fontSize: Dimension.getScreenHeight() * 5/100,fontWeight: FontWeight.w500)),
-                          Text("8",style: TextStyle(color: colors[_i],fontFamily: 'Poppins',fontSize: Dimension.getScreenHeight() * 5/100,fontWeight: FontWeight.w500)),
+                          Text("0",style: TextStyle(color: colors[_i],fontFamily: 'Poppins',fontSize: Dimension.getScreenHeight() * 5/100,fontWeight: FontWeight.w500)),
                         ]
                     ),
                     Text("INSIDE TEMP" ,style: TextStyle(fontSize: Dimension.getScreenHeight() * 4/100,fontWeight: FontWeight.w300,)),

@@ -19,17 +19,18 @@ class HomeThermometer extends StatefulWidget {
 class _HomeThermometerState extends State<HomeThermometer> {
 
   late double _i;
+  late double n = 41;
   @override
   void initState() {
     super.initState();
     setState(() {
-      _i = 20;
+      _i = 10;
     });
   }
 
   @override
   Widget build(BuildContext context) {
-    Offset offset = Offset(Dimension.getScreenHeight() * 45/100 - Dimension.getScreenHeight() * _i/100, 0);
+    Offset offset = Offset(Dimension.getScreenHeight() * 45/100 - (Dimension.getScreenHeight() * _i/100), 0);
     return Container(
       width: Dimension.getScreenWidth() * 17/100,
       height: Dimension.getScreenHeight() * 45/100,
@@ -53,23 +54,26 @@ class _HomeThermometerState extends State<HomeThermometer> {
               onPanUpdate: (details){
                 setState(() {
                  if (details.delta.dy > 0) {
-                     setState(() {
-                       if (_i > 10) {
-                         _i = _i - details.delta.dy/10;
-                         widget.firstPage.setTemp(_i.floor());;
+                     if (_i > 10.5) {
+                       setState(() {
+                         _i = _i - ((details.delta.dy * 0.64)/13);
+                       });
+                       if (n > 41 ) {
+                         n = n - (details.delta.dy/13);
+                         widget.firstPage.setTemp(n.floor());
                        }
-                     });
-
-
+                     }
                  }
                  else{
-                   setState(() {
-                     if (_i < 40) {
-                       _i = _i - details.delta.dy/10;
-                       widget.firstPage.setTemp(_i.floor());
+                   if (_i < 41) {
+                     setState(() {
+                       _i = _i - ((details.delta.dy * 0.64)/13);
+                     });
+                     if (n < 90 ) {
+                       n = n - (details.delta.dy/13);
+                       widget.firstPage.setTemp(n.ceil());
                      }
-                   });
-
+                   }
 
                  }
 
@@ -91,11 +95,14 @@ class _HomeThermometerState extends State<HomeThermometer> {
             right:0,
             child: InkWell(
               onTap: (){
-                if (_i < 40) {
+                if (_i < 41) {
                   setState(() {
-                    _i++;
+                    _i = _i + 0.64;
                   });
-                  widget.firstPage.setTemp(_i.floor());
+                  if (n < 89 ) {
+                    n ++;
+                    widget.firstPage.setTemp(n.ceil());
+                  }
                 }
 
 
@@ -116,11 +123,14 @@ class _HomeThermometerState extends State<HomeThermometer> {
             right: 0,
             child: InkWell(
               onTap: (){
-                if (_i > 10) {
+                if (_i > 10.5) {
                   setState(() {
-                    _i--;
+                    _i = _i - 0.64;
                   });
-                  widget.firstPage.setTemp(_i.floor());
+                  if (n > 41) {
+                    n--;
+                    widget.firstPage.setTemp(n.floor());
+                  }
 
                 }
               },

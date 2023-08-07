@@ -19,6 +19,7 @@ class _SchedulePageState extends State<SchedulePage> {
   late var _controller;
   bool _checked = false;
   late String json;
+  late List<dynamic>  data;
   @override
   void initState() {
     super.initState();
@@ -27,7 +28,6 @@ class _SchedulePageState extends State<SchedulePage> {
       setState(() {
         if (_controller.value) {
           _checked = true;
-
         } else {
           _checked = false;
         }
@@ -35,9 +35,24 @@ class _SchedulePageState extends State<SchedulePage> {
     });
      json = """
    [
- {"StTime":60,"ComfortSetting":"Home"}
+ {"StTime":0,"ComfortSetting":"Off"},
+ {"StTime":1080,"ComfortSetting":"Sleep"},
+ {"StTime":1460,"ComfortSetting":"Home"},
+ {"StTime":2000,"ComfortSetting":"Away"},
+ {"StTime":2560,"ComfortSetting":"Home"},
+ {"StTime":2800,"ComfortSetting":"Sleep"},
+ {"StTime":3400,"ComfortSetting":"Away"},
+ {"StTime":3460,"ComfortSetting":"Home"},
+ {"StTime":3800,"ComfortSetting":"Sleep"},
+ {"StTime":4200,"ComfortSetting":"Off"},
+ {"StTime":4320,"ComfortSetting":"Away"},
+ {"StTime":5785,"ComfortSetting":"Off"},
+ {"StTime":5894,"ComfortSetting":"Home"},
+ {"StTime":6798,"ComfortSetting":"Sleep"}
+ 
 ]
 """;
+
   }
 
   @override
@@ -129,15 +144,11 @@ class _SchedulePageState extends State<SchedulePage> {
 
     List<Time> times = [];
 
-
-
-
-    List<dynamic>  data = jsonDecode(json);
+    data = jsonDecode(json);
 
     for (var element in data) {
       times.add(Time.fromJson(element));
     }
-
     return Scaffold(
       appBar: AppBar(
         title: const Text(
@@ -205,8 +216,11 @@ class _SchedulePageState extends State<SchedulePage> {
                                         onTap: (){
                                           setState(() {
                                             json = """
-                                            []
-                                            """;
+                                             [
+                                              {"StTime":0,"ComfortSetting":"Off"}
+                                             ]
+                                             """;
+                                            data = jsonDecode(json);
                                           });
                                           Navigator.of(context).pop();
                                         },
