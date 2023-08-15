@@ -1,6 +1,5 @@
-import 'dart:convert';
-
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 import 'package:hub_control/Widgets/day_column.dart';
 import 'package:hub_control/Widgets/used_text.dart';
 import 'package:hub_control/model/time.dart';
@@ -8,18 +7,22 @@ import 'package:hub_control/utils/Constants.dart';
 import 'package:hub_control/utils/dimension.dart';
 import 'package:flutter_advanced_switch/flutter_advanced_switch.dart';
 
+import '../provider/hubControl_provider.dart';
+import 'add_event.dart';
+
 class SchedulePage extends StatefulWidget {
-  const SchedulePage({super.key});
+  final String userName;
+   const SchedulePage(this.userName,{super.key});
 
   @override
   State<SchedulePage> createState() => _SchedulePageState();
 }
-
 class _SchedulePageState extends State<SchedulePage> {
-  late var _controller;
+
+  late ValueNotifier<bool> _controller;
   bool _checked = false;
-  late String json;
-  late List<dynamic>  data;
+  late List<Time> times;
+
   @override
   void initState() {
     super.initState();
@@ -33,30 +36,22 @@ class _SchedulePageState extends State<SchedulePage> {
         }
       });
     });
-     json = """
-   [
- {"StTime":0,"ComfortSetting":"Off"},
- {"StTime":1080,"ComfortSetting":"Sleep"},
- {"StTime":1460,"ComfortSetting":"Home"},
- {"StTime":2000,"ComfortSetting":"Away"},
- {"StTime":2560,"ComfortSetting":"Home"},
- {"StTime":2800,"ComfortSetting":"Sleep"},
- {"StTime":3400,"ComfortSetting":"Away"},
- {"StTime":3460,"ComfortSetting":"Home"},
- {"StTime":3800,"ComfortSetting":"Sleep"},
- {"StTime":4200,"ComfortSetting":"Off"},
- {"StTime":4320,"ComfortSetting":"Away"},
- {"StTime":5785,"ComfortSetting":"Off"},
- {"StTime":5894,"ComfortSetting":"Home"},
- {"StTime":6798,"ComfortSetting":"Sleep"}
- 
-]
-""";
+    times = Get.find<List<Time>>();
 
   }
 
+  addSchedule(Time time) async{
+    await HubControlDbProvider.db.insertTime(time);
+    times = await HubControlDbProvider.db.getAllTimes();
+    setState(() {
+      times = times;
+    });
+
+  }
   @override
   Widget build(BuildContext context) {
+
+    times.sort((a, b) => a.stTime!.compareTo(b.stTime!),);
     AdvancedSwitch(
       controller: _controller,
     );
@@ -142,17 +137,16 @@ class _SchedulePageState extends State<SchedulePage> {
           ),
         ];
 
-    List<Time> times = [];
-
-    data = jsonDecode(json);
-
-    for (var element in data) {
-      times.add(Time.fromJson(element));
+    Future<void> clearData() async{
+      await HubControlDbProvider.db.clearDb();
+      times = [];
     }
+
+
     return Scaffold(
       appBar: AppBar(
-        title: const Text(
-          "HubControl",
+        title: Text(
+          widget.userName.isNotEmpty ? widget.userName: "HubControl",
         ),
         backgroundColor: const Color(0xffF94892),
         leading: const Icon(
@@ -169,7 +163,6 @@ class _SchedulePageState extends State<SchedulePage> {
                       backgroundColor: Colors.white,
                       title: Icon(Icons.error,color: Colors.red.shade900,size: 32),
                       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(32)),
-
                       actions:  [
                         Column(
                           children: [
@@ -215,12 +208,7 @@ class _SchedulePageState extends State<SchedulePage> {
                                       child: GestureDetector(
                                         onTap: (){
                                           setState(() {
-                                            json = """
-                                             [
-                                              {"StTime":0,"ComfortSetting":"Off"}
-                                             ]
-                                             """;
-                                            data = jsonDecode(json);
+                                            clearData();
                                           });
                                           Navigator.of(context).pop();
                                         },
@@ -255,9 +243,11 @@ class _SchedulePageState extends State<SchedulePage> {
               padding: const EdgeInsets.all(12.0),
               child: InkWell(
                 onTap: (){
+                  // addSchedule(Time(stTime: 2300,comfortSetting: "Off"));
+                  Navigator.of(context).push(MaterialPageRoute(builder: (context) => AddEvent(addSchedule)));
                 },
                 child: const Icon(
-                  Icons.settings,
+                  Icons.add,
                   size: 26,
                 ),
               ))
@@ -280,7 +270,7 @@ class _SchedulePageState extends State<SchedulePage> {
                         crossAxisAlignment: CrossAxisAlignment.end,
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
-                          Container(height: Dimension.getScreenHeight() * 8/100,child: const UsedText(text: "")),
+                          SizedBox(height: Dimension.getScreenHeight() * 8/100,child: const UsedText(text: "")),
                           ...hours(),
                         ],
                       ),
@@ -298,11 +288,11 @@ class _SchedulePageState extends State<SchedulePage> {
                         Expanded(
                           child: Column(
                             children: [
-                              Container(
+                              SizedBox(
                                 height: Dimension.getScreenHeight() * 8/100,
                                 child: const Center(child: UsedText(text: "Mon")),
                               ),
-                              Container(
+                              SizedBox(
                                   height:
                                       Dimension.getScreenHeight() * 72 / 100,
                                   child: DayColumn(
@@ -317,11 +307,11 @@ class _SchedulePageState extends State<SchedulePage> {
                         Expanded(
                           child: Column(
                             children: [
-                              Container(
+                              SizedBox(
                                 height: Dimension.getScreenHeight() * 8/100,
                                 child: const Center(child: UsedText(text: "Tue")),
                               ),
-                              Container(
+                              SizedBox(
                                 height: Dimension.getScreenHeight() * 72/100,
                                 child: DayColumn(
                                     times: times,
@@ -335,8 +325,8 @@ class _SchedulePageState extends State<SchedulePage> {
                         Expanded(
                           child: Column(
                             children: [
-                              Container(height: Dimension.getScreenHeight() * 8/100,child: const Center(child: UsedText(text: "Wed"))),
-                              Container(
+                              SizedBox(height: Dimension.getScreenHeight() * 8/100,child: const Center(child: UsedText(text: "Wed"))),
+                              SizedBox(
                                 height: Dimension.getScreenHeight() * 72/100,
                                 child: DayColumn(
                                   times: times,
@@ -350,8 +340,8 @@ class _SchedulePageState extends State<SchedulePage> {
                         Expanded(
                           child: Column(
                             children: [
-                              Container(height: Dimension.getScreenHeight() * 8/100,child: const Center(child: UsedText(text: "Thu"))),
-                              Container(
+                              SizedBox(height: Dimension.getScreenHeight() * 8/100,child: const Center(child: UsedText(text: "Thu"))),
+                              SizedBox(
                                 height: Dimension.getScreenHeight() * 72/100,
                                 child: DayColumn(
                                   times: times,
@@ -365,8 +355,8 @@ class _SchedulePageState extends State<SchedulePage> {
                         Expanded(
                           child: Column(
                             children: [
-                              Container(height: Dimension.getScreenHeight() * 8/100,child: const Center(child: UsedText(text: "Fri"))),
-                              Container(
+                              SizedBox(height: Dimension.getScreenHeight() * 8/100,child: const Center(child: UsedText(text: "Fri"))),
+                              SizedBox(
                                 height: Dimension.getScreenHeight() * 72/100,
                                 child: DayColumn(
                                   times : times,
@@ -380,9 +370,9 @@ class _SchedulePageState extends State<SchedulePage> {
                         Expanded(
                           child: Column(
                             children: [
-                              Container(height: Dimension.getScreenHeight() * 8/100,
+                              SizedBox(height: Dimension.getScreenHeight() * 8/100,
                                   child: const Center(child: UsedText(text: "Sat"))),
-                              Container(
+                              SizedBox(
                                 height: Dimension.getScreenHeight() * 72/100,
                                 child: DayColumn(
                                   times: times,
@@ -396,11 +386,11 @@ class _SchedulePageState extends State<SchedulePage> {
                         Expanded(
                           child: Column(
                             children: [
-                              Container(
+                              SizedBox(
                                   height: Dimension.getScreenHeight() * 8 / 100,
                                   child: const Center(
                                       child: UsedText(text: "Sun"))),
-                              Container(
+                              SizedBox(
                                 height: Dimension.getScreenHeight() * 72 / 100,
                                 child: DayColumn(
                                   times: times,

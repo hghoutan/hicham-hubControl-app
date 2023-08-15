@@ -25,17 +25,11 @@ class _ThermometerPainterState extends State<Thermometer> {
       this.image = image;
     });
   }
-
-  @override
+   @override
   Widget build(BuildContext context) {
-      if (image != null) {
-        return CustomPaint(
-                foregroundPainter: ThermometerPainter(image!),
-              );
-      } else {
-        return CircularProgressIndicator();
-
-      }
+    return CustomPaint(
+        foregroundPainter: image != null ? ThermometerPainter(image!) : null
+    );
   }
 }
 class ThermometerPainter extends CustomPainter{
@@ -58,11 +52,6 @@ class ThermometerPainter extends CustomPainter{
     final circle2Paint = Paint()
       ..color = const Color(0xffffffff);
 
-
-
-
-
-    final imagePaint = Paint();
     //endregion
 
     //region First Container coordinates
@@ -81,12 +70,8 @@ class ThermometerPainter extends CustomPainter{
     //endregion
 
 
-
     final rect1 = Rect.fromPoints(c1A, c1B);
     final rect2 = Rect.fromPoints(c2A, c2B);
-
-
-
 
 
     canvas.drawRRect(RRect.fromRectAndCorners(rect1,topRight:Radius.circular((size.width * 4/6 ) * .5 ),topLeft: Radius.circular((size.width * 4/6 ) * .5)), c1Paint);

@@ -2,51 +2,35 @@ import 'package:flutter/material.dart';
 
 import '../utils/dimension.dart';
 
-class HomeButton extends StatefulWidget {
-  Color color;
-  String state;
-  String keyword;
-  String keyword2;
+class HomeButton extends StatelessWidget {
+  final Color color;
+  final String state;
+  final String keyword;
 
-  HomeButton({super.key,required this.color,required this.state, required this.keyword, required this.keyword2});
+  const HomeButton({super.key,required this.color,required this.state, required this.keyword});
 
-  @override
-  State<HomeButton> createState() => _HomeButtonState();
-}
-
-class _HomeButtonState extends State<HomeButton> {
-
-
-
-  @override
-  void initState() {
-    super.initState();
-
-  }
   @override
   Widget build(BuildContext context) {
     return  Stack(
         children: [
-          Container(
+          SizedBox(
             width: Dimension.getScreenHeight() * 15/100,
             height: Dimension.getScreenHeight() * 15/100,
             child: CustomPaint(
-                  foregroundPainter: HomeButtonPainter( color:widget.color,)),
+                foregroundPainter: HomeButtonPainter( color:color,)),
           ),
           SizedBox(
             width: Dimension.getScreenHeight() * 15/100,
             height: Dimension.getScreenHeight() * 15/100,
             child: Center(
               child: Container(
-                 width: Dimension.getScreenHeight() * 10.5/100,
-            height: Dimension.getScreenHeight() * 10.5/100,
+                  width: Dimension.getScreenHeight() * 11.5/100,
+                  height: Dimension.getScreenHeight() * 10.5/100,
                   child:  Column(
+                    crossAxisAlignment: CrossAxisAlignment.center,
                     children: [
-                      SizedBox(
-                        height: Dimension.getScreenHeight() * 1/100,
-                      ),
-                       Text(
-                        widget.state,
+                      Text(
+                        state,
                         style: TextStyle(
                           fontSize: Dimension.getScreenWidth() * 5/100,
                           fontWeight: FontWeight.bold,
@@ -54,23 +38,17 @@ class _HomeButtonState extends State<HomeButton> {
                           color: Colors.black87,
                         ),
                       ),
-
-                       Text(
-                        widget.keyword,
-                        style: TextStyle(
-                          fontSize: Dimension.getScreenWidth() * 3/100,
-                          fontFamily: 'Poppins',
-                          fontWeight: FontWeight.bold,
-                          color: Colors.black87,
-                        ),
-                      ),
-                       Text(
-                         widget.keyword2,
-                        style: TextStyle(
-                          fontSize: Dimension.getScreenWidth() * 3/100,
-                          fontFamily: 'Poppins',
-                          fontWeight: FontWeight.bold,
-                          color: Colors.black87,
+                      Container(
+                        alignment: Alignment.center,
+                        child: Text(
+                          keyword,
+                          style: TextStyle(
+                            fontSize: Dimension.getScreenWidth() * 3.5/100,
+                            fontFamily: 'Poppins',
+                            fontWeight: FontWeight.bold,
+                            color: Colors.black87,
+                          ),
+                          textAlign: TextAlign.center,
                         ),
                       ),
                     ],
@@ -80,11 +58,9 @@ class _HomeButtonState extends State<HomeButton> {
           ),
         ]
     );
-    //   CustomPaint(
-    //   foregroundPainter: HomeButtonPainter(),
-    // );
   }
 }
+
 class HomeButtonPainter  extends CustomPainter{
   Color color;
   HomeButtonPainter({required this.color});

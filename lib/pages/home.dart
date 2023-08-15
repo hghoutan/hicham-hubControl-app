@@ -1,4 +1,3 @@
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:hub_control/pages/schedule_page.dart';
 import 'package:persistent_bottom_nav_bar/persistent_tab_view.dart';
@@ -6,8 +5,8 @@ import 'package:persistent_bottom_nav_bar/persistent_tab_view.dart';
 import 'first_page.dart';
 
 class HomePage extends StatefulWidget {
-
-  const HomePage({super.key});
+  final String userName;
+  const HomePage(this.userName, {super.key});
 
   @override
   State<HomePage> createState() => _HomePageState();
@@ -18,20 +17,20 @@ class _HomePageState extends State<HomePage> {
   int _index = 0;
   List<Widget>  _buildScreens() {
     return [
-      const FirstPage(),
-      const SchedulePage(),
+      FirstPage(widget.userName),
+       SchedulePage(widget.userName),
     ];
   }
   List<PersistentBottomNavBarItem> _navBarsItems() {
     return [
       PersistentBottomNavBarItem(
-        icon: _index == 0 ? Icon(Icons.home,color: Colors.white) :  Icon(Icons.home_outlined,color: Colors.white),
+        icon: _index == 0 ? const Icon(Icons.home,color: Colors.white) :  const Icon(Icons.home_outlined,color: Colors.white),
         title: ("Home"),
         activeColorPrimary: Colors.white,
         inactiveColorPrimary: Colors.white,
       ),
       PersistentBottomNavBarItem(
-        icon: _index == 1 ? Icon(Icons.calendar_month) : Icon(Icons.calendar_month_outlined),
+        icon: _index == 1 ? const Icon(Icons.calendar_month) : const Icon(Icons.calendar_month_outlined),
         title: ("calender"),
         activeColorPrimary: Colors.white,
         inactiveColorPrimary: Colors.white,
@@ -65,7 +64,7 @@ class _HomePageState extends State<HomePage> {
         hideNavigationBarWhenKeyboardShows: true, // Recommended to set 'resizeToAvoidBottomInset' as true while using this argument. Default is true.
         decoration: NavBarDecoration(
           borderRadius: BorderRadius.circular(10.0),
-          colorBehindNavBar :Color(0xffF94892),
+          colorBehindNavBar :const Color(0xffF94892),
         ),
         popAllScreensOnTapOfSelectedTab: true,
         popActionScreens: PopActionScreensType.all,

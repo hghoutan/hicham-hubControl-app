@@ -1,8 +1,5 @@
-import 'dart:convert';
 
 import 'package:flutter/material.dart';
-import 'package:get/get.dart';
-
 import '../model/time.dart';
 import '../utils/Constants.dart';
 import '../utils/dimension.dart';
@@ -17,102 +14,106 @@ class DayColumn extends StatelessWidget {
 
 
 
-
-
-
   @override
   Widget build(BuildContext context) {
 
-    late List<Widget> children ;
-    late List<Time> dayTimes ;
+    late List<Widget> children;
+    late List<Time> dayTimes;
     Time? oldTime;
     dayTimes = [];
-    times.forEachIndexed((index, element) {
-      int stTime = element.stTime!;
-      String setting = element.comfortSetting!;
-      switch(day){
-        case 0 :
-          if (stTime >= 0 && stTime <= 1440) {
-            dayTimes.add(Time(stTime: stTime, comfortSetting: setting));
-          }
-          break;
-        case 1 :
-          if (stTime >= 0 && stTime <= 1440) {
-            oldTime = Time(stTime: stTime, comfortSetting: setting);
-          }
-          if (stTime > 1440 && stTime <= 2880) {
-            if (oldTime == null){
-              oldTime = times[index - 1];
-            }
-            dayTimes.add(Time(stTime: stTime - 1440,comfortSetting: setting));
-          }
-          break;
-        case 2 :
-          if (stTime >= 0 && stTime <= 2880) {
-            oldTime = Time(stTime: stTime, comfortSetting: setting);
-          }
-          if (stTime > 2880 && stTime <= 4320) {
-            if (oldTime == null){
-              oldTime = times[index - 1];
-            }
-            dayTimes.add(Time(stTime: stTime - (1440 * 2),comfortSetting: setting));
-          }
-          break;
-        case 3 :
-          if (stTime >= 0 && stTime <= 4320) {
-            oldTime = Time(stTime: stTime, comfortSetting: setting);
-          }
-          if (stTime > 4320 && stTime <= 5760) {
-            if (oldTime == null){
-              oldTime = times[index - 1];
-            }
-            dayTimes.add(Time(stTime: stTime - (1440 * 3),comfortSetting: setting));
-          }
-          break;
-        case 4 :
-          if (stTime >= 0 && stTime <= 5760) {
-            oldTime = Time(stTime: stTime, comfortSetting: setting);
-          }
-          if (stTime > 5760 && stTime <= 7200) {
-            if (oldTime == null){
-              oldTime = times[index - 1];
-            }
-            dayTimes.add(Time(stTime: stTime - (1440 * 4),comfortSetting: setting));
-          }
-          break;
-        case 5 :
-          if (stTime >= 0 && stTime <= 7200) {
-            oldTime = Time(stTime: stTime, comfortSetting: setting);
-          }
-          if (stTime > 7200 && stTime <= 8640) {
-            if (oldTime == null){
-              oldTime = times[index - 1];
-            }
-            dayTimes.add(Time(stTime: stTime - (1440 * 5),comfortSetting: setting));
-          }
-          break;
-        case 6:
-          if (stTime >= 0 && stTime <= 8640) {
-            oldTime = Time(stTime: stTime, comfortSetting: setting);
-          }
-          if (stTime > 8640 && stTime <= 10080) {
-            if (oldTime == null){
-              oldTime = times[index - 1];
-            }
-            dayTimes.add(Time(stTime: stTime - (1440 * 6),comfortSetting: setting));
-          }
-          break;
 
-      }
-
-
-    });
     late Color? color;
     children = [];
     var total = 0.0;
-    if (oldTime != null) {
-      Color? oldColor = Constants.appColors[oldTime!.comfortSetting];
 
+    //region Func
+    void fillData(){
+      times.forEachIndexed((index, element) {
+        int stTime = element.stTime!;
+        String setting = element.comfortSetting!;
+        switch(day){
+          case 0 :
+            if (stTime >= 0 && stTime <= 1440) {
+              dayTimes.add(Time(stTime: stTime, comfortSetting: setting));
+            }
+            break;
+          case 1 :
+            if (stTime >= 0 && stTime <= 1440) {
+              oldTime = Time(stTime: stTime, comfortSetting: setting);
+            }
+            if (stTime > 1440 && stTime <= 2880) {
+              if (oldTime == null){
+                oldTime = times[index - 1];
+              }
+              dayTimes.add(Time(stTime: stTime - 1440,comfortSetting: setting));
+            }
+            break;
+          case 2 :
+            if (stTime >= 0 && stTime <= 2880) {
+              oldTime = Time(stTime: stTime, comfortSetting: setting);
+            }
+            if (stTime > 2880 && stTime <= 4320) {
+              if (oldTime == null){
+                oldTime = times[index - 1];
+              }
+              dayTimes.add(Time(stTime: stTime - (1440 * 2),comfortSetting: setting));
+            }
+            break;
+          case 3 :
+            if (stTime >= 0 && stTime <= 4320) {
+              oldTime = Time(stTime: stTime, comfortSetting: setting);
+            }
+            if (stTime > 4320 && stTime <= 5760) {
+              if (oldTime == null){
+                oldTime = times[index - 1];
+              }
+              dayTimes.add(Time(stTime: stTime - (1440 * 3),comfortSetting: setting));
+            }
+            break;
+          case 4 :
+            if (stTime >= 0 && stTime <= 5760) {
+              oldTime = Time(stTime: stTime, comfortSetting: setting);
+            }
+            if (stTime > 5760 && stTime <= 7200) {
+              if (oldTime == null){
+                oldTime = times[index - 1];
+              }
+              dayTimes.add(Time(stTime: stTime - (1440 * 4),comfortSetting: setting));
+            }
+            break;
+          case 5 :
+            if (stTime >= 0 && stTime <= 7200) {
+              oldTime = Time(stTime: stTime, comfortSetting: setting);
+            }
+            if (stTime > 7200 && stTime <= 8640) {
+              if (oldTime == null){
+                oldTime = times[index - 1];
+              }
+              dayTimes.add(Time(stTime: stTime - (1440 * 5),comfortSetting: setting));
+            }
+            break;
+          case 6:
+            if (stTime >= 0 && stTime <= 8640) {
+              oldTime = Time(stTime: stTime, comfortSetting: setting);
+            }
+            if (stTime > 8640 && stTime <= 10080) {
+              if (oldTime == null){
+                oldTime = times[index - 1];
+              }
+              dayTimes.add(Time(stTime: stTime - (1440 * 6),comfortSetting: setting));
+            }
+            break;
+
+        }
+
+
+      });
+    }
+    void handleOldTime(){
+      if (oldTime == null) {
+        return;
+      }
+      Color? oldColor = Constants.appColors[oldTime!.comfortSetting];
       if (dayTimes.isEmpty) {
         children.add(
             Container(
@@ -120,13 +121,13 @@ class DayColumn extends StatelessWidget {
               width: Dimension.getScreenWidth(),
               decoration: BoxDecoration(
                 borderRadius:BorderRadius.circular(6.0),
-                color: oldColor!,
+                color: disable ? Constants.disableColors[oldTime!.comfortSetting] : oldColor!,
               ),
             )
         );
       }else{
         int startTime = 0;
-        int endTime =   dayTimes[0].stTime!;;
+        int endTime =   dayTimes[0].stTime!;
         total = total + ((endTime - startTime)/1440);
         children.add(
             Container(
@@ -134,78 +135,72 @@ class DayColumn extends StatelessWidget {
               width: Dimension.getScreenWidth(),
               decoration: BoxDecoration(
                 borderRadius: const BorderRadius.only(topRight: Radius.circular(6.0),topLeft: Radius.circular(6.0)),
-                color: oldColor!,
+                color: disable ? Constants.disableColors[oldTime!.comfortSetting] : oldColor!,
               ),
             )
         );
       }
-
     }
-
-    if (dayTimes.isNotEmpty ) {
+    void isFirstAndLastTime(int i){
+      if (dayTimes.length != 1) return;
+      if (dayTimes[i].stTime == 0) return;
+      if (!isMonday) return;
+      int startTime = 0;
+      int endTime =  dayTimes[i].stTime!;
+      total = total + ((endTime - startTime)/1440);
+      children.add(
+          Container(
+            height : ((endTime - startTime)/1440) * Dimension.getScreenHeight() * 72/100,
+            width: Dimension.getScreenWidth(),
+            decoration: BoxDecoration(
+              borderRadius:  oldTime == null ?
+              const BorderRadius.only(topRight: Radius.circular(6.0),topLeft: Radius.circular(6.0)) :
+              const BorderRadius.only(topRight: Radius.circular(0.0),topLeft: Radius.circular(0.0)),
+              color:Constants.appColors['Off'],
+            ),
+          )
+      );
+    }
+    void isFirstTime(int i){
+      if (dayTimes[i].stTime == 0) return;
+      if (!isMonday) return;
+      int startTime = 0;
+      int endTime =  dayTimes[i].stTime!;
+      total = total + ((endTime - startTime)/1440);
+      children.add(
+          Container(
+            height : ((endTime - startTime)/1440) * Dimension.getScreenHeight() * 72/100,
+            width: Dimension.getScreenWidth(),
+            decoration: BoxDecoration(
+              borderRadius:  oldTime == null ?
+              const BorderRadius.only(topRight: Radius.circular(6.0),topLeft: Radius.circular(6.0)) :
+              const BorderRadius.only(topRight: Radius.circular(0.0),topLeft: Radius.circular(0.0)),
+              color:Constants.appColors['Off'],
+            ),
+          )
+      );
+    }
+    void handleDayColumn(){
+      if (dayTimes.isEmpty) {
+        return;
+      }
       for (var i=0;i<dayTimes.length;i++){
         color = Constants.appColors[dayTimes[i].comfortSetting];
-
-        if (dayTimes[i].stTime == dayTimes[dayTimes.length - 1].stTime ) {
-          // check if day has one time then add the lost one
-
-          if (dayTimes.length == 1) {
-            if (dayTimes[i].stTime != 0) {
-              if (isMonday){
-                int startTime = 0;
-                int endTime =  dayTimes[i].stTime!;
-                total = total + ((endTime - startTime)/1440);
-                children.add(
-                    Container(
-                      height : ((endTime - startTime)/1440) * Dimension.getScreenHeight() * 72/100,
-                      width: Dimension.getScreenWidth(),
-                      decoration: BoxDecoration(
-                        borderRadius:  oldTime == null ?
-                        const BorderRadius.only(topRight: Radius.circular(6.0),topLeft: Radius.circular(6.0)) :
-                        const BorderRadius.only(topRight: Radius.circular(0.0),topLeft: Radius.circular(0.0)),
-                        color: disable ? Colors.black26 : Constants.appColors['Off'],
-                        //widget.isMond ? Constants.appColors['Off'] : Constants.appColors['Sleep'],
-                      ),
-                    )
-                );
-              }
-
-
-            }
-          }
+        if (dayTimes[i].stTime == dayTimes[dayTimes.length - 1].stTime ){
+          isFirstAndLastTime(i);
           children.add(
               Container(
                 height: (1 - total ) * Dimension.getScreenHeight() * 72/100,
                 width:Dimension.getScreenWidth(),
                 decoration: BoxDecoration(
                   borderRadius: const BorderRadius.only(bottomRight: Radius.circular(6.0),bottomLeft: Radius.circular(6.0)),
-                  color:color,
+                  color:disable ? Constants.disableColors[dayTimes[i].comfortSetting] : color!,
                 ),
               )
           );
         }
         else if (dayTimes[i].stTime == dayTimes[0].stTime) {
-          if (dayTimes[i].stTime != 0) {
-            if (isMonday) {
-              int startTime = 0;
-              int endTime =  dayTimes[i].stTime!;
-              total = total + ((endTime - startTime)/1440);
-              children.add(
-                  Container(
-                    height : ((endTime - startTime)/1440) * Dimension.getScreenHeight() * 72/100,
-                    width: Dimension.getScreenWidth(),
-                    decoration: BoxDecoration(
-                      borderRadius:  oldTime == null ?
-                      const BorderRadius.only(topRight: Radius.circular(6.0),topLeft: Radius.circular(6.0)) :
-                      const BorderRadius.only(topRight: Radius.circular(0.0),topLeft: Radius.circular(0.0)),
-                      color: disable ? Colors.black26 : Constants.appColors['Off'],
-                    ),
-                  )
-              );
-            }
-
-
-          }
+          isFirstTime(i);
 
           int startTime = dayTimes[i].stTime!;
           int endTime =  dayTimes[i+1].stTime!;
@@ -218,12 +213,12 @@ class DayColumn extends StatelessWidget {
                   borderRadius:  oldTime == null ?
                   const BorderRadius.only(topRight: Radius.circular(6.0),topLeft: Radius.circular(6.0)) :
                   const BorderRadius.only(topRight: Radius.circular(0.0),topLeft: Radius.circular(0.0)),
-                  color: disable ? Colors.black26 : color,
+                  color: disable ? Constants.disableColors[dayTimes[i].comfortSetting] : color!,
                 ),
               )
           );
         }
-        else {
+        else{
           int startTime = dayTimes[i].stTime!;
           int endTime =  dayTimes[i+1].stTime!;
           total = total + ((endTime - startTime)/1440);
@@ -231,14 +226,19 @@ class DayColumn extends StatelessWidget {
               Container(
                 height: ((endTime - startTime) /1440) * Dimension.getScreenHeight() * 72/100,
                 width:Dimension.getScreenWidth(),
-                color:color,
+                color:disable ? Constants.disableColors[dayTimes[i].comfortSetting] : color!,
               )
           );
 
         }
-
       }
     }
+    //endregion
+
+    fillData();
+    handleOldTime();
+    handleDayColumn();
+
     return  Container(
       margin: EdgeInsets.symmetric(horizontal: Dimension.getScreenWidth() * 3/100),
       height:Dimension.getScreenHeight()* 72/100,
@@ -253,6 +253,7 @@ class DayColumn extends StatelessWidget {
         ],
       ),
     );
+
   }
 
 }

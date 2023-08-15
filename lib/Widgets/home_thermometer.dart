@@ -3,14 +3,11 @@ import 'package:hub_control/Widgets/paints/add_button_.dart';
 import 'package:hub_control/Widgets/paints/remove_button.dart';
 import 'package:hub_control/Widgets/paints/scale_controller.dart';
 import 'package:hub_control/Widgets/paints/thermo.dart';
-
-import '../pages/first_page.dart';
 import '../utils/dimension.dart';
-import '../Widgets/day_column.dart' as main;
 
 class HomeThermometer extends StatefulWidget {
-  final FirstPageState firstPage;
-  const HomeThermometer({super.key,required this.firstPage});
+  final void Function(int) setTemp;
+  const HomeThermometer({super.key,required this.setTemp});
 
   @override
   State<HomeThermometer> createState() => _HomeThermometerState();
@@ -31,12 +28,12 @@ class _HomeThermometerState extends State<HomeThermometer> {
   @override
   Widget build(BuildContext context) {
     Offset offset = Offset(Dimension.getScreenHeight() * 45/100 - (Dimension.getScreenHeight() * _i/100), 0);
-    return Container(
+    return SizedBox(
       width: Dimension.getScreenWidth() * 17/100,
       height: Dimension.getScreenHeight() * 45/100,
       child: Stack(
         children:[
-          Container(
+          SizedBox(
             width: Dimension.getScreenWidth() * 17/100,
             height: Dimension.getScreenHeight() * 45/100,
             child: const Thermometer(),
@@ -60,7 +57,7 @@ class _HomeThermometerState extends State<HomeThermometer> {
                        });
                        if (n > 41 ) {
                          n = n - (details.delta.dy/13);
-                         widget.firstPage.setTemp(n.floor());
+                         widget.setTemp(n.floor());
                        }
                      }
                  }
@@ -71,12 +68,10 @@ class _HomeThermometerState extends State<HomeThermometer> {
                      });
                      if (n < 90 ) {
                        n = n - (details.delta.dy/13);
-                       widget.firstPage.setTemp(n.ceil());
+                       widget.setTemp(n.ceil());
                      }
                    }
-
                  }
-
                 });
               },
               behavior: HitTestBehavior.translucent,
@@ -101,13 +96,13 @@ class _HomeThermometerState extends State<HomeThermometer> {
                   });
                   if (n < 89 ) {
                     n ++;
-                    widget.firstPage.setTemp(n.ceil());
+                    widget.setTemp(n.ceil());
                   }
                 }
 
 
               },
-              child: Container(
+              child: SizedBox(
                 width: Dimension.getScreenHeight() * 4/100,
                 height: Dimension.getScreenHeight() * 4/100,
                 // color: Colors.red,
@@ -129,12 +124,12 @@ class _HomeThermometerState extends State<HomeThermometer> {
                   });
                   if (n > 41) {
                     n--;
-                    widget.firstPage.setTemp(n.floor());
+                    widget.setTemp(n.floor());
                   }
 
                 }
               },
-              child: Container(
+              child: SizedBox(
                 width: Dimension.getScreenHeight() * 4/100,
                 height: Dimension.getScreenHeight() * 4/100,
                 child: CustomPaint(
