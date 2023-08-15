@@ -1,6 +1,7 @@
 import 'dart:async';
 import 'package:hub_control/model/hub_user.dart';
 import 'package:path/path.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'package:sqflite/sqflite.dart';
 
 import '../model/time.dart';
@@ -10,16 +11,19 @@ class HubControlDbProvider {
   static final HubControlDbProvider db = HubControlDbProvider._();
   static  Database? _database;
 
-
+  Future _onConfigure(Database db) async {
+    await db.execute('PRAGMA foreign_keys = ON');
+  }
   Future<Database> get database async {
     if (_database != null) {
       return _database!;
     }
     _database = await openDatabase(
       join(await getDatabasesPath(), 'HubControl.db'),
+      onConfigure: _onConfigure,
       onCreate: (db, version) async {
         await db.execute(
-          'CREATE TABLE Schedule(StTime INTEGER PRIMARY KEY, ComfortSetting TEXT)',
+          'CREATE TABLE Schedule(StTime INTEGER PRIMARY KEY, ComfortSetting TEXT,userCode TEXT, FOREIGN KEY(userCode) REFERENCES Hubs (PairCode) )',
         );
         //region fill Schedule table with data
 
@@ -83,9 +87,11 @@ class HubControlDbProvider {
       conflictAlgorithm: ConflictAlgorithm.replace,
     );
   }
+
   Future<void> clearDb() async {
     final db = await database;
     await db.rawDelete("DELETE FROM Schedule");
+
 
   }
   Future<void> updateUserName(String pairCode, String newName) async {
@@ -103,12 +109,14 @@ class HubControlDbProvider {
   Future<List<Time>> getAllTimes() async {
   // Get a reference to the database.
   final db = await database;
-
+  SharedPreferences s = await SharedPreferences.getInstance();
   // Query the table for all The Dogs.
-  final List<Map<String, dynamic>> maps = await db.query('Schedule');
+  final List<Map<String, dynamic>> maps = 
+  await db.rawQuery("SELECT StTime, ComfortSetting, userCode FROM Schedule WHERE  userCode LIKE ? ",
+  [s.getString("PairCode")]);
 
   return List.generate(maps.length, (i) {
-  return Time( stTime: maps[i]['StTime'], comfortSetting: maps[i]['ComfortSetting']);
+    return Time( stTime: maps[i]['StTime'], comfortSetting: maps[i]['ComfortSetting'],userPairCode: maps[i]['userCode']);
   }
   );
   }

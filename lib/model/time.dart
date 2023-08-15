@@ -1,8 +1,9 @@
 class Time {
   int? stTime;
   String? comfortSetting;
+  String? userPairCode;
 
-  Time({this.stTime, this.comfortSetting});
+  Time({this.stTime, this.comfortSetting,this.userPairCode});
 
   Time.fromJson(Map<String, dynamic> json) {
     stTime = json['StTime'];
@@ -18,6 +19,7 @@ class Time {
     return {
       'StTime': stTime,
       'ComfortSetting': comfortSetting,
+      'userCode': userPairCode,
     };
   }
 }

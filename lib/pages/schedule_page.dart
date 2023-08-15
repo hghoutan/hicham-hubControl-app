@@ -3,9 +3,11 @@ import 'package:get/get.dart';
 import 'package:hub_control/Widgets/day_column.dart';
 import 'package:hub_control/Widgets/used_text.dart';
 import 'package:hub_control/model/time.dart';
+import 'package:hub_control/pages/auth.dart';
 import 'package:hub_control/utils/Constants.dart';
 import 'package:hub_control/utils/dimension.dart';
 import 'package:flutter_advanced_switch/flutter_advanced_switch.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 import '../provider/hubControl_provider.dart';
 import 'add_event.dart';
@@ -36,16 +38,19 @@ class _SchedulePageState extends State<SchedulePage> {
         }
       });
     });
-    times = Get.find<List<Time>>();
+    times = [];
+    initTimes();
 
   }
-
-  addSchedule(Time time) async{
-    await HubControlDbProvider.db.insertTime(time);
+  initTimes()async{
     times = await HubControlDbProvider.db.getAllTimes();
     setState(() {
       times = times;
     });
+  }
+  addSchedule(Time time,) async{
+    await HubControlDbProvider.db.insertTime(time);
+    initTimes();
 
   }
   @override
@@ -55,6 +60,9 @@ class _SchedulePageState extends State<SchedulePage> {
     AdvancedSwitch(
       controller: _controller,
     );
+    for (var element in times) {
+      print("${element.stTime} - ${element.comfortSetting} - UserCode: ${element.userPairCode}");
+    }
     List<Widget> hours() => [
           const Expanded(child: UsedText(text: "12 AM")),
           const Expanded(
@@ -149,9 +157,17 @@ class _SchedulePageState extends State<SchedulePage> {
           widget.userName.isNotEmpty ? widget.userName: "HubControl",
         ),
         backgroundColor: const Color(0xffF94892),
-        leading: const Icon(
-          Icons.menu,
-          size: 26,
+        leading: GestureDetector(
+          onTap: () async{
+            print("entred");
+            SharedPreferences s = await SharedPreferences.getInstance();
+            await s.remove("PairCode");
+            Navigator.of(context).pushReplacement(MaterialPageRoute(builder: (builder) => const AuthenticationPage()));
+          },
+          child: const Icon(
+            Icons.power_settings_new,
+            size: 26,
+          ),
         ),
         actions:  [
            Padding(

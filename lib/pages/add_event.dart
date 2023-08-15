@@ -6,6 +6,7 @@ import 'package:hub_control/model/add_event_radio.dart';
 import 'package:hub_control/model/time.dart';
 import 'package:hub_control/utils/dimension.dart';
 import 'package:intl/intl.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class AddEvent extends StatefulWidget {
   final void Function(Time) addSchedule;
@@ -27,6 +28,7 @@ class _AddEventState extends State<AddEvent> {
   late var hour ;
   late var minute ;
   late String clock;
+  late SharedPreferences s ;
 
   void addRemoveFromList(int i){
     bool exist = false;
@@ -40,6 +42,9 @@ class _AddEventState extends State<AddEvent> {
   late String _hourOrException ;
   late String  _minuteOrException;
 
+  Future<void> initSharedPreferences()async {
+    s = await SharedPreferences.getInstance();
+  }
   @override
   void initState() {
     super.initState();
@@ -55,6 +60,7 @@ class _AddEventState extends State<AddEvent> {
     clicked = false;
     _hourOrException = "Hour";
     _minuteOrException = "Minute";
+    initSharedPreferences();
   }
   @override
   Widget build(BuildContext context) {
@@ -489,25 +495,25 @@ class _AddEventState extends State<AddEvent> {
                   for(int i =0; i<selectedDays.length;i++ ){
                     switch(selectedDays[i]){
                       case 0:
-                        widget.addSchedule(Time(stTime: (int.parse(hour) *60) + int.parse(minute),comfortSetting: _state));
+                        widget.addSchedule(Time(stTime: (int.parse(hour) *60) + int.parse(minute),comfortSetting: _state, userPairCode: s.getString("PairCode")));
                         break;
                       case 1:
-                        widget.addSchedule(Time(stTime: (int.parse(hour) *60) + int.parse(minute) + 1440,comfortSetting: _state));
+                        widget.addSchedule(Time(stTime: (int.parse(hour) *60) + int.parse(minute) + 1440,comfortSetting: _state , userPairCode: s.getString("PairCode")));
                         break;
                       case 2:
-                        widget.addSchedule(Time(stTime: (int.parse(hour) *60) + int.parse(minute)+ (1440 * 2),comfortSetting: _state));
+                        widget.addSchedule(Time(stTime: (int.parse(hour) *60) + int.parse(minute)+ (1440 * 2),comfortSetting: _state , userPairCode: s.getString("PairCode")));
                         break;
                       case 3:
-                        widget.addSchedule(Time(stTime: (int.parse(hour) *60) + int.parse(minute)+ (1440 * 3),comfortSetting: _state));
+                        widget.addSchedule(Time(stTime: (int.parse(hour) *60) + int.parse(minute)+ (1440 * 3),comfortSetting: _state, userPairCode: s.getString("PairCode")));
                         break;
                       case 4:
-                        widget.addSchedule(Time(stTime: (int.parse(hour) *60) + int.parse(minute) + (1440 * 4),comfortSetting: _state));
+                        widget.addSchedule(Time(stTime: (int.parse(hour) *60) + int.parse(minute) + (1440 * 4),comfortSetting: _state, userPairCode: s.getString("PairCode")));
                         break;
                       case 5:
-                        widget.addSchedule(Time(stTime: (int.parse(hour) *60) + int.parse(minute)+ (1440 * 5),comfortSetting: _state));
+                        widget.addSchedule(Time(stTime: (int.parse(hour) *60) + int.parse(minute)+ (1440 * 5),comfortSetting: _state, userPairCode: s.getString("PairCode")));
                         break;
                       case 6:
-                        widget.addSchedule(Time(stTime: (int.parse(hour) *60) + int.parse(minute) + (1440 * 6),comfortSetting: _state));
+                        widget.addSchedule(Time(stTime: (int.parse(hour) *60) + int.parse(minute) + (1440 * 6),comfortSetting: _state, userPairCode: s.getString("PairCode")));
                         break;
                     }
                   }
