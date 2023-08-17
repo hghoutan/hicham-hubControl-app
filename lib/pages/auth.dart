@@ -178,7 +178,9 @@ class _AuthenticationPageState extends State<AuthenticationPage> {
               behavior: HitTestBehavior.translucent,
               onTap: () async{
                 if (await authentication(pairCodeController.text)) {
-                   Navigator.of(context).pushReplacement(MaterialPageRoute(builder: (context)=> HomePage(nameController.text)));
+                  SharedPreferences s = await SharedPreferences.getInstance();
+                  s.setBool("Navigator", true);
+                   Navigator.of(context).push(MaterialPageRoute(builder: (context)=> HomePage(nameController.text,true)));
                 }else{
                   showDialog(context: context, barrierDismissible: false,builder: (BuildContext context){
                     return  AlertDialog(

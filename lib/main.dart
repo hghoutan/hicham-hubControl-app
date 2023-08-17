@@ -30,6 +30,7 @@ void main() async{
 
   user = await SharedPreferences.getInstance();
 
+
   runApp(const MyApp());
 
 
@@ -52,7 +53,7 @@ class MyApp extends StatelessWidget {
     return GetMaterialApp(
       debugShowCheckedModeBanner: false,
       color: const Color(0xffF0E7D8),
-      home: isUser ?  HomePage(userName) : const AuthenticationPage(),
+      home: isUser ?  HomePage(userName,null) : const AuthenticationPage(),
       theme: ThemeData(
         fontFamily: 'Poppins',
       ),

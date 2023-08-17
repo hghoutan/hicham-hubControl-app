@@ -495,7 +495,7 @@ class _AddEventState extends State<AddEvent> {
                   for(int i =0; i<selectedDays.length;i++ ){
                     switch(selectedDays[i]){
                       case 0:
-                        widget.addSchedule(Time(stTime: (int.parse(hour) *60) + int.parse(minute),comfortSetting: _state, userPairCode: s.getString("PairCode")));
+                        widget.addSchedule(Time(stTime: (int.parse(hour) * 60) + int.parse(minute),comfortSetting: _state, userPairCode: s.getString("PairCode")));
                         break;
                       case 1:
                         widget.addSchedule(Time(stTime: (int.parse(hour) *60) + int.parse(minute) + 1440,comfortSetting: _state , userPairCode: s.getString("PairCode")));

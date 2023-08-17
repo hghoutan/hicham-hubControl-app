@@ -1,9 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:get/get.dart';
 import 'package:hub_control/Widgets/day_column.dart';
 import 'package:hub_control/Widgets/used_text.dart';
 import 'package:hub_control/model/time.dart';
-import 'package:hub_control/pages/auth.dart';
 import 'package:hub_control/utils/Constants.dart';
 import 'package:hub_control/utils/dimension.dart';
 import 'package:flutter_advanced_switch/flutter_advanced_switch.dart';
@@ -11,10 +9,13 @@ import 'package:shared_preferences/shared_preferences.dart';
 
 import '../provider/hubControl_provider.dart';
 import 'add_event.dart';
+import 'auth.dart';
 
 class SchedulePage extends StatefulWidget {
   final String userName;
-   const SchedulePage(this.userName,{super.key});
+  final BuildContext cntx;
+  final bool? fromNavigator;
+   const SchedulePage(this.userName, this.cntx, this.fromNavigator,{super.key});
 
   @override
   State<SchedulePage> createState() => _SchedulePageState();
@@ -159,10 +160,15 @@ class _SchedulePageState extends State<SchedulePage> {
         backgroundColor: const Color(0xffF94892),
         leading: GestureDetector(
           onTap: () async{
-            print("entred");
+            print("entered");
             SharedPreferences s = await SharedPreferences.getInstance();
             await s.remove("PairCode");
-            Navigator.of(context).pushReplacement(MaterialPageRoute(builder: (builder) => const AuthenticationPage()));
+            if (widget.fromNavigator == true) {
+              Navigator.pop(widget.cntx);
+              return;
+            }
+            Navigator.pushReplacement(widget.cntx, MaterialPageRoute(
+                        builder: (builder) =>  AuthenticationPage()));
           },
           child: const Icon(
             Icons.power_settings_new,
